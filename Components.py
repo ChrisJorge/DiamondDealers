@@ -32,3 +32,6 @@ class Button():
                 func() # Call the function linked to the button
             if game.mouse.get_pressed()[0] == 0: # Check if button is no longer being clicked
                 self.clicked = False # Set self.clicked to false
+
+
+    

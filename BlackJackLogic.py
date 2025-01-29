@@ -6,17 +6,20 @@ assets = ['./BlackJackAssets/AceDiamond.svg', './BlackJackAssets/TwoDiamond.svg'
           './BlackJackAssets/NineDiamond.svg', './BlackJackAssets/TenDiamond.svg', './BlackJackAssets/KingDiamond.svg']
 
 class BlackJack:
-    def __init__(self, screenHeight, screenWidth): # Function to initialize the blackjack class
+    def __init__(self, screen, screenHeight, screenWidth): # Function to initialize the blackjack class
         self.deck = {} # Initialize the deck dictionary
         self.playerScore = 0 # Initialize the playerScore with a value of 0, used to keep track of players current score
         self.playerCards = 0 # Initialize the playerCards with a value of 0, used to aid in positioning player cards on screen
         self.dealerScore = 0 # Initialize the dealerScore with a value of 0, used to keep track of dealers current score
         self.dealerCards = 0 # Initialize the dealerCards with a value of 0, used to aid in positioning dealer cards on screen
+        self.screen = screen # Initialize screen, used to place objects on the screen
         self.screenHeight = screenHeight # Initialize screenHeight, used to help with positioning cards on screen
         self.screenWidth = screenWidth # Initialize screenWidth, used to help with positioning cards on screen
         self.dealerTurn = False # Initialize dealerTurn, keeps track on if it is the dealers turn
         self.playerTurn = True # Initialize playerTurn, keeps track on if it is the players turn
         self.gameOver = False # Initialize gameOver, keeps track on if the game is over
+        self.secondDealerCard = None # Initialize secondDealerCard, used to keep track of what the seconc card the dealer has is.
+        self.start = True # Initialize start, used to keep track of opening actions at each new game
 
         for index in range(len(assets)): # Loop through every single url path in the assets list
             card = game.image.load(assets[index]) # load the url path to the image in the variable card
@@ -30,14 +33,28 @@ class BlackJack:
             else:
                 value = [10] # Set the value to 10
             self.deck[index] = (card, value) # Create the key in the dictionary being the index and have its value be (card, [value])
+        
+        for turn in range(4): # Loop through 4 turns, 2 for player 2 for dealer
+            if turn % 2 == 0:
+                self.addPlayerCard()
+            else:
+                if turn == 3:
+                    self.addDealerCard(True)
+                else:
+                    self.addDealerCard()
     
-    def addPlayerCard(self, screen): # Function to add a card for the player
-        if self.playerTurn and self.playerScore < 21: # Check to make sure it is the players turn and that the players score isn't over 21
-            index = random.randint(0, len(assets) - 1) # Use random.randint to get a random integer from 0 to the length of the list - 1 (inclusive)
-            card = self.deck[index] # Get the card at that key
-            x, y = self.center(card[0], False) # Send the first value of the card, the picture, to the, center function
+    def getCard(self):
+        index = random.randint(0, len(assets) - 1) # Use random.randint to get a random integer from 0 to the length of the list - 1 (inclusive)
+        card = self.deck[index] # Get the card at that key
+        return card # Return the card
+
+    
+    def addPlayerCard(self): # Function to add a card for the player
+        if (self.playerTurn and self.playerScore < 21) or self.start: # Check to make sure it is the players turn and that the players score isn't over 21
+            card = self.getCard() # Call the get card function to get a card
+            x, y = self.center(card[0], False) # Send the first value of the card, the picture, to the center function
             x += (50 * self.playerCards) # Increase the x axis coordinates by 50 for each card already on screen for the player
-            screen.blit(card[0], (x,y)) # Put the card on the screen
+            self.screen.blit(card[0], (x,y)) # Put the card on the screen
 
             self.playerCards += 1 # Increase the playerCards variable by 1
 
@@ -49,6 +66,34 @@ class BlackJack:
             else:
                 self.playerScore += card[1][0] # Add the value of the card (non ace)
 
+    def addDealerCard(self, secondCard = False):
+        if ((self.dealerTurn and self.dealerScore <= 16) or self.start):
+            card = self.getCard() # Call the get card function to get a card
+            x,y = self.center(card[0], True) # Send the first value of the card, the picture, to the center function
+            x += (50 * self.dealerCards) # Increase the x axis coordinates by 50 for each card already on screen for the dealer
+            if secondCard: # Check if this is the second card given to the dealer
+                self.secondDealerCard = card
+                cardBack = game.image.load('./BlackJackAssets/CardBack.png') # Load the image with the back of a playing card
+                cardBack = game.transform.scale(cardBack,(200,250)) # Scale the image to the correct size
+                self.screen.blit(cardBack, (x,y)) # Put the card on the screen
+            else:    
+                self.screen.blit(card[0], (x,y)) # Put the card on the screen
+
+            self.dealerCards += 1 # Increase the playerCards variable by 1
+
+            if len(card[1]) > 1: # Check if the length of the value list is greater than 1, if so it is the ace card
+                if card[1][1] + self.dealerScore > 21: # Check if adding the ace cards value of 11 would result in a score higher than 21
+                    self.dealerScore += card[1][0] # Add the aces value of 1 if the value would be greater than 21 if ace had a value of 11
+                else:
+                    self.dealerScore += card[1][1] # Add the aces value of 11
+            else:
+                self.dealerScore += card[1][0] # Add the value of the card (non ace)
+
+            if self.dealerScore == 21: # Check if the two cards combine equal 21    
+                    self.gameOver == True # Change the game over variable to true as the dealer got blackjack
+                    self.screen.blit(card[0], (x,y)) # Put the card on the screen
+        else:
+            self.dealerTurn = False # Set dealerTurn to false if dealer hand is over 17
 
     def center(self, asset, top):
         middleHeight = self.screenHeight // 2 # Get the middle of the screen
@@ -57,7 +102,7 @@ class BlackJack:
         width = ((self.screenWidth - widthBeginning) // 2) + assetSize[0] # Get the center width
         if top: # Check if these cards are going to the dealer
            heightBeginning = 0 # Beginning height is set to 0 as 0 is the top 
-           height = ((middleHeight - heightBeginning)  - assetSize[1]) # Subtract the middle by the top and subtracts the asset size to get the center of top 
+           height = ((middleHeight - heightBeginning)  - ((assetSize[1] * 0.5) + (assetSize[1] * 0.85))) # Subtract the middle by the top and subtracts the asset size to get the center of top 
         else:
         # Add middleHeight and screenHeight then divide by 2 and subtract by half the asset size to get center of bottom half
            height = (((middleHeight + self.screenHeight) // 2 ) - (assetSize[1] * 0.5))
