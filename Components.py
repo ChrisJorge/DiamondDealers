@@ -29,6 +29,6 @@ class Button():
         if self.rectangle.collidepoint(mousePosition): # Check if mouse cursor is colliding with the button
             if game.mouse.get_pressed()[0] == 1 and self.clicked == False: # Check if button has been right clicked and the button has not been clicked yet
                 self.clicked = True # Set self.clicked to true
-                func(self.screen) # Call the function linked to the button
+                func() # Call the function linked to the button
             if game.mouse.get_pressed()[0] == 0: # Check if button is no longer being clicked
                 self.clicked = False # Set self.clicked to false

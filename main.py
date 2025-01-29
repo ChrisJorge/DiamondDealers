@@ -45,8 +45,8 @@ quitButton.write('Quit', 15) # Add text to the quit button
 # screen.blit(test,(300, 500))
 
 while gameRunning:
-    hitButton.action(blackJack.addPlayerCard) # Initalize the hit buttons ability
-    standButton.action(blackJack.addPlayerCard) # initialize the stand buttons ability
+    hitButton.action(lambda : blackJack.addPlayerCard(screen)) # Initalize the hit buttons ability
+    standButton.action( lambda: blackJack.addPlayerCard(screen)) # initialize the stand buttons ability
     for event in game.event.get():
         if event.type == game.QUIT:
             gameRunning = False
