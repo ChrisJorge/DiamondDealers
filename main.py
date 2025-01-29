@@ -5,7 +5,6 @@ from Components import Button # Import the button class
 
 from BlackJackLogic import BlackJack
 
-
 #____________________ Initialize The Screen ___________________________
 game.init() # Initialize the pygame module 
 
@@ -28,11 +27,11 @@ game.draw.rect(screen, (211, 211, 211), game.Rect(0,0,systemWidth * 0.2, systemH
 blackJack = BlackJack(screen, systemHeight - 100, systemWidth - 100)
 
 hitButton = Button(screen, (85, 86, 99), systemHeight // 16, (systemWidth * 0.2) // 2, systemHeight // 16, (systemWidth * 0.2) // 2) # Initialize and create the hit button
-standButton = Button(screen,(85, 86, 99), systemHeight // 16, (systemWidth * 0.2) // 2, systemHeight // 16, ((systemWidth * 0.2) // 2) * 2) # Initialize and create the stand button
+holdButton = Button(screen,(85, 86, 99), systemHeight // 16, (systemWidth * 0.2) // 2, systemHeight // 16, ((systemWidth * 0.2) // 2) * 2) # Initialize and create the stand button
 quitButton = Button(screen, (85, 86, 99), systemHeight // 16, (systemWidth * 0.2) // 2, systemHeight // 16, ((systemWidth * 0.2) // 2) * 3) # Initialize and create the quit button
 
 hitButton.write('Hit', 15) # Add text to the hit button
-standButton.write('Stand', 15) # Add text to the stand button
+holdButton.write('Hold', 15) # Add text to the stand button
 quitButton.write('Quit', 15) # Add text to the quit button
 
 # test = game.image.load('./BlackJackAssets/FiveDiamond.svg')
@@ -46,7 +45,7 @@ quitButton.write('Quit', 15) # Add text to the quit button
 
 while gameRunning:
     hitButton.action(lambda : blackJack.addPlayerCard()) # Initalize the hit buttons ability
-    standButton.action( lambda: blackJack.addPlayerCard()) # initialize the stand buttons ability
+    holdButton.action( lambda: blackJack.hold()) # initialize the stand buttons ability
     for event in game.event.get():
         if event.type == game.QUIT:
             gameRunning = False

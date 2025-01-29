@@ -19,7 +19,10 @@ class BlackJack:
         self.playerTurn = True # Initialize playerTurn, keeps track on if it is the players turn
         self.gameOver = False # Initialize gameOver, keeps track on if the game is over
         self.secondDealerCard = None # Initialize secondDealerCard, used to keep track of what the seconc card the dealer has is.
+        self.secondDealerCardX = None # Initialize secondDealerCardx, used to change the flipped over card
+        self.secondDealerCardY = None # Initialize secondDealercardy, used to change the flipped over card
         self.start = True # Initialize start, used to keep track of opening actions at each new game
+        self.winner = None # Initialzie winner, used to determine who won.
 
         for index in range(len(assets)): # Loop through every single url path in the assets list
             card = game.image.load(assets[index]) # load the url path to the image in the variable card
@@ -42,6 +45,7 @@ class BlackJack:
                     self.addDealerCard(True)
                 else:
                     self.addDealerCard()
+        self.start = False # Change start to false
     
     def getCard(self):
         index = random.randint(0, len(assets) - 1) # Use random.randint to get a random integer from 0 to the length of the list - 1 (inclusive)
@@ -65,6 +69,10 @@ class BlackJack:
                     self.playerScore += card[1][1] # Add the aces value of 11
             else:
                 self.playerScore += card[1][0] # Add the value of the card (non ace)
+            
+            if self.playerScore > 21:
+                self.gameOver = True
+                self.playerTurn = False
 
     def addDealerCard(self, secondCard = False):
         if ((self.dealerTurn and self.dealerScore <= 16) or self.start):
@@ -76,6 +84,8 @@ class BlackJack:
                 cardBack = game.image.load('./BlackJackAssets/CardBack.svg') # Load the image with the back of a playing card
                 cardBack = game.transform.scale(cardBack,(200,250)) # Scale the image to the correct size
                 self.screen.blit(cardBack, (x,y)) # Put the card on the screen
+                self.secondDealerCardX = x # Save the x coordinate value of the card
+                self.secondDealerCardY = y # Save the y coordinate value of the card
             else:    
                 self.screen.blit(card[0], (x,y)) # Put the card on the screen
 
@@ -92,8 +102,10 @@ class BlackJack:
             if self.dealerScore == 21: # Check if the two cards combine equal 21    
                     self.gameOver == True # Change the game over variable to true as the dealer got blackjack
                     self.screen.blit(card[0], (x,y)) # Put the card on the screen
+                    self.playerTurn = False # Change the player turn to false, game is over
         else:
             self.dealerTurn = False # Set dealerTurn to false if dealer hand is over 17
+            
 
     def center(self, asset, top):
         middleHeight = self.screenHeight // 2 # Get the middle of the screen
@@ -106,4 +118,13 @@ class BlackJack:
         else:
         # Add middleHeight and screenHeight then divide by 2 and subtract by half the asset size to get center of bottom half
            height = (((middleHeight + self.screenHeight) // 2 ) - (assetSize[1] * 0.5))
-        return width, height # return the width and the height
+        return width, height # Return the width and the height
+    
+    def hold(self):
+        if self.playerTurn:
+            self.playerTurn = False # Change playersTurn to false
+            self.dealerTurn = True # Change dealersTurn to true
+            self.screen.blit(self.secondDealerCard[0], (self.secondDealerCardX, self.secondDealerCardY)) # Flip the upside down card
+            while self.dealerTurn:
+                self.addDealerCard()
+
