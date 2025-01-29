@@ -73,7 +73,7 @@ class BlackJack:
             x += (50 * self.dealerCards) # Increase the x axis coordinates by 50 for each card already on screen for the dealer
             if secondCard: # Check if this is the second card given to the dealer
                 self.secondDealerCard = card
-                cardBack = game.image.load('./BlackJackAssets/CardBack.png') # Load the image with the back of a playing card
+                cardBack = game.image.load('./BlackJackAssets/CardBack.svg') # Load the image with the back of a playing card
                 cardBack = game.transform.scale(cardBack,(200,250)) # Scale the image to the correct size
                 self.screen.blit(cardBack, (x,y)) # Put the card on the screen
             else:    
