@@ -40,5 +40,10 @@ while gameRunning:
     for event in game.event.get():
         if event.type == game.QUIT:
             gameRunning = False
-    
+    if blackJack.determineWinner() == 1 or blackJack.determineWinner == 0:
+        centerBox = CenterBox(screen,systemHeight - 100, systemWidth - 100, (211, 211, 211), blackJack.determineWinner())
+        height, width, xCoordinate, yCoordinate = centerBox.getInfo()
+        Btn = Button(screen, (85,86,99), height, width, xCoordinate, yCoordinate)
+        Btn.write('Replay', 15)
+        Btn.action(lambda: blackJack.restartGame())
     game.display.update() # update the content that appears on the screen

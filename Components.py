@@ -1,5 +1,5 @@
 import pygame as game
-
+# from BlackJackLogic import BlackJack
 game.font.init() # Initialize the pyfame font function, used to put text in buttons
 
 class Button():
@@ -45,8 +45,8 @@ class CenterBox:
         self.rectangle = game.Rect(self.xCoordinate, self.yCoordinate, self.width, self.height)
         game.draw.rect(self.screen, self.colorRGB, self.rectangle)
         self.write(self.screenHeight // 2, self.screenWidth // 2, self.xCoordinate, self.yCoordinate, winner, 25)
-        self.button = Button(screen, (85, 86, 99) ,self.height // 2, self.width // 2, self.xCoordinate + self.width // 3.75, self.yCoordinate + self.height // 3.5)
-        self.button.write('Replay', 15)
+        # self.button = Button(screen, (85, 86, 99) ,self.height // 2, self.width // 2, self.xCoordinate + self.width // 3.75, self.yCoordinate + self.height // 3.5)
+        # self.button.write('Replay', 15)
     
     def center(self,):
         self.centerHeight = self.screenHeight // 2
@@ -66,3 +66,6 @@ class CenterBox:
         else:
             self.text = font.render('Dealer wins',True, (0,0,0)) # Render the text
         self.screen.blit(self.text, [((self.text.get_width() // 2) + (centerWidth + xCoordinate // 12.5)), ((self.text.get_height() // 2) + ((centerHeight - (yCoordinate // 2.5))))])
+
+    def getInfo(self,):
+        return self.height // 2, self.width // 2, self.xCoordinate + self.width // 3.75, self.yCoordinate + self.height // 3.5

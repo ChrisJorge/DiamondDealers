@@ -1,6 +1,6 @@
 import pygame as game
 import random
-from Components import CenterBox
+from Components import CenterBox, Button
 
 # Initialzie an array holding the url paths to each of the images
 assets = ['./BlackJackAssets/AceDiamond.svg', './BlackJackAssets/TwoDiamond.svg', './BlackJackAssets/ThreeDiamond.svg', './BlackJackAssets/FourDiamond.svg', 
@@ -19,12 +19,10 @@ class BlackJack:
         self.screenWidth = screenWidth # Initialize screenWidth, used to help with positioning cards on screen
         self.dealerTurn = False # Initialize dealerTurn, keeps track on if it is the dealers turn
         self.playerTurn = True # Initialize playerTurn, keeps track on if it is the players turn
-        self.gameOver = False # Initialize gameOver, keeps track on if the game is over
         self.secondDealerCard = None # Initialize secondDealerCard, used to keep track of what the seconc card the dealer has is.
         self.secondDealerCardX = None # Initialize secondDealerCardx, used to change the flipped over card
         self.secondDealerCardY = None # Initialize secondDealercardy, used to change the flipped over card
         self.start = True # Initialize start, used to keep track of opening actions at each new game
-        self.winner = None # Initialzie winner, used to determine who won.
         self.playerAceCount = 0 # Initialize playerAceCount, used to determine if player has gotten an Ace
 
         for index in range(len(assets)): # Loop through every single url path in the assets list
@@ -70,7 +68,8 @@ class BlackJack:
                     while self.playerScore > 21 or  self.playerAceCount > 0:
                         self.playerScore -= 10 # Reduce the score by 10, changing the ace value to a 1
                         self.playerAceCount -= 1 # Subtract the number of aces by 1
-                self.hold() # Call the hold function to let the dealer pick cards
+                else:
+                    self.hold() # Call the hold function to let the dealer pick cards
 
     def addDealerCard(self, secondCard = False):
         if ((self.dealerTurn and self.dealerScore <= 16) or self.start):
@@ -97,9 +96,8 @@ class BlackJack:
             else:
                 self.dealerScore += card[1][0] # Add the value of the card (non ace)
 
-            if self.dealerScore == 21: # Check if the two cards combine equal 21    
-                    self.gameOver == True # Change the game over variable to true as the dealer got blackjack
-                    self.screen.blit(card[0], (x,y)) # Put the card on the screen
+            if self.dealerScore == 21: # Check if the cards combined equal 21    
+                    self.screen.blit(self.secondDealerCard[0] , (x,y)) # Put the card on the screen
                     self.playerTurn = False # Change the player turn to false, game is over
                     self.determineWinner()
         else:
@@ -124,7 +122,7 @@ class BlackJack:
             self.playerTurn = False # Change playersTurn to false
             self.dealerTurn = True # Change dealersTurn to true
             self.screen.blit(self.secondDealerCard[0], (self.secondDealerCardX, self.secondDealerCardY)) # Flip the upside down card
-            while self.dealerTurn and self.playerScore < 21: # While it is the dealers turn
+            while self.dealerTurn: # While it is the dealers turn
                 self.addDealerCard() # Call addDealerCard function to give dealer a card
             self.determineWinner() # Call self.determineWinner to determine who won the game
 
@@ -153,6 +151,27 @@ class BlackJack:
                 self.winner = 0 # Set winner to player
             else:
                 self.winner = 1 # Set winner to dealer
-        CenterBox(self.screen,self.screenHeight, self.screenWidth, (211, 211, 211), self.winner)
+        return self.winner
+        # centerBox = CenterBox(self.screen,self.screenHeight, self.screenWidth, (211, 211, 211), self.winner)
+        # height, width, xCoordinate, yCoordinate = centerBox.getInfo()
+        # Btn = Button(self.screen, (85,86,99), height, width, xCoordinate, yCoordinate)
+        # Btn.write('Replay', 15)
+        # Btn.action(lambda: self.restartGame())
+    
+    def restartGame(self):
+        self.playerScore = 0 # Reset the playerScore with a value of 0, used to keep track of players current score
+        self.playerCards = 0 # Reset the playerCards with a value of 0, used to aid in positioning player cards on screen
+        self.dealerScore = 0 # Reset the dealerScore with a value of 0, used to keep track of dealers current score
+        self.dealerCards = 0 # Reset the dealerCards with a value of 0, used to aid in positioning dealer cards on screen
+        self.dealerTurn = False # Reset dealerTurn, keeps track on if it is the dealers turn
+        self.playerTurn = True # Reset playerTurn, keeps track on if it is the players turn
+        self.secondDealerCard = None # Reset secondDealerCard, used to keep track of what the seconc card the dealer has is.
+        self.secondDealerCardX = None # Reset secondDealerCardx, used to change the flipped over card
+        self.secondDealerCardY = None # Reset secondDealercardy, used to change the flipped over card
+        self.start = True # Reset start, used to keep track of opening actions at each new game
+        self.playerAceCount = 0 # Reset playerAceCount, used to determine if player has gotten an Ace
+        self.winner = None
+        game.draw.rect(self.screen, (78, 106, 84), game.Rect(self.screenWidth * 0.2,0, self.screenWidth, self.screenHeight)) # Create the gray bar on the left side which will contain the options 
+        self.startGame()
 
         
