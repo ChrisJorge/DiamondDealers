@@ -1,7 +1,7 @@
 #____________________ Import Necessary Libraries and classes _______________________
 import pygame as game # Import the pygame module
 
-from Components import Button # Import the button class
+from Components import Button, CenterBox # Import the button class
 
 from BlackJackLogic import BlackJack
 
@@ -33,15 +33,6 @@ quitButton = Button(screen, (85, 86, 99), systemHeight // 16, (systemWidth * 0.2
 hitButton.write('Hit', 15) # Add text to the hit button
 holdButton.write('Hold', 15) # Add text to the stand button
 quitButton.write('Quit', 15) # Add text to the quit button
-
-# test = game.image.load('./BlackJackAssets/FiveDiamond.svg')
-# w = test.get_width()
-# h = test.get_height()
-# test = game.transform.scale(test,(150, 200))
-# screen.blit(test,(300, 500))
-
-
-# screen.blit(test,(300, 500))
 
 while gameRunning:
     hitButton.action(lambda : blackJack.addPlayerCard()) # Initalize the hit buttons ability

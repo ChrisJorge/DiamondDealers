@@ -1,5 +1,7 @@
 import pygame as game
 import random
+from Components import CenterBox
+
 # Initialzie an array holding the url paths to each of the images
 assets = ['./BlackJackAssets/AceDiamond.svg', './BlackJackAssets/TwoDiamond.svg', './BlackJackAssets/ThreeDiamond.svg', './BlackJackAssets/FourDiamond.svg', 
           './BlackJackAssets/FiveDiamond.svg', './BlackJackAssets/SixDiamond.svg', './BlackJackAssets/SevenDiamond.svg', './BlackJackAssets/EightDiamond.svg', 
@@ -38,7 +40,7 @@ class BlackJack:
                 value = [10] # Set the value to 10
             self.deck[index] = (card, value) # Create the key in the dictionary being the index and have its value be (card, [value])
     
-        self.startGame()
+        self.startGame() # Call startGame function to start the game
 
     def getCard(self):
         index = random.randint(0, len(assets) - 1) # Use random.randint to get a random integer from 0 to the length of the list - 1 (inclusive)
@@ -68,7 +70,7 @@ class BlackJack:
                     while self.playerScore > 21 or  self.playerAceCount > 0:
                         self.playerScore -= 10 # Reduce the score by 10, changing the ace value to a 1
                         self.playerAceCount -= 1 # Subtract the number of aces by 1
-                self.hold()
+                self.hold() # Call the hold function to let the dealer pick cards
 
     def addDealerCard(self, secondCard = False):
         if ((self.dealerTurn and self.dealerScore <= 16) or self.start):
@@ -122,32 +124,34 @@ class BlackJack:
             self.playerTurn = False # Change playersTurn to false
             self.dealerTurn = True # Change dealersTurn to true
             self.screen.blit(self.secondDealerCard[0], (self.secondDealerCardX, self.secondDealerCardY)) # Flip the upside down card
-            while self.dealerTurn:
-                self.addDealerCard()
-            self.determineWinner()
+            while self.dealerTurn and self.playerScore < 21: # While it is the dealers turn
+                self.addDealerCard() # Call addDealerCard function to give dealer a card
+            self.determineWinner() # Call self.determineWinner to determine who won the game
 
 
     def startGame(self):
         for turn in range(4): # Loop through 4 turns, 2 for player 2 for dealer
-            if turn % 2 == 0:
-                self.addPlayerCard()
+            if turn % 2 == 0: # Check if the turn is even
+                self.addPlayerCard() # Call the addPlayerCard function
             else:
-                if turn == 3:
-                    self.addDealerCard(True)
+                if turn == 3: # Check if the turn is the last turn for the dealer
+                    self.addDealerCard(True) # Call addDealerCard with True makes the card back show 
                 else:
-                    self.addDealerCard()
+                    self.addDealerCard() # Call addDealerCard function
         self.start = False # Change start to false
 
        
     def determineWinner(self):
-
-        if self.playerScore > 21:
-            self.winner = 'Dealer'
-        elif self.dealerScore > 21:
-            self.winner = 'Player'
+        # Playerwin = 0
+        # Dealerwin = 1
+        if self.playerScore > 21: # Check if player score is over 21
+            self.winner = 1 # Set winner to dealer
+        elif self.dealerScore > 21: # Check if dealer score is over 21
+            self.winner = 0 # Set winner to player
         else:
-            if self.playerScore > self.dealerScore:
-                self.winner = 'Player'
+            if self.playerScore > self.dealerScore: # Check if player has higher score than dealer
+                self.winner = 0 # Set winner to player
             else:
-                self.winner = 'Dealer'
-        print(self.winner)
+                self.winner = 1 # Set winner to dealer
+        CenterBox(self.screen,self.screenHeight, self.screenWidth,  (85, 86, 99), self.winner)
+        
