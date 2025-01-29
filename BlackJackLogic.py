@@ -153,5 +153,6 @@ class BlackJack:
                 self.winner = 0 # Set winner to player
             else:
                 self.winner = 1 # Set winner to dealer
-        CenterBox(self.screen,self.screenHeight, self.screenWidth,  (85, 86, 99), self.winner)
+        CenterBox(self.screen,self.screenHeight, self.screenWidth, (211, 211, 211), self.winner)
+
         
