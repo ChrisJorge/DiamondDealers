@@ -1,8 +1,7 @@
 import pygame as game
 import random
-from Components import CenterBox, Button
 
-# Initialzie an array holding the url paths to each of the images
+# Initialize an array holding the url paths to each of the images
 assets = ['./BlackJackAssets/AceDiamond.svg', './BlackJackAssets/TwoDiamond.svg', './BlackJackAssets/ThreeDiamond.svg', './BlackJackAssets/FourDiamond.svg', 
           './BlackJackAssets/FiveDiamond.svg', './BlackJackAssets/SixDiamond.svg', './BlackJackAssets/SevenDiamond.svg', './BlackJackAssets/EightDiamond.svg', 
           './BlackJackAssets/NineDiamond.svg', './BlackJackAssets/TenDiamond.svg', './BlackJackAssets/KingDiamond.svg']
@@ -26,14 +25,14 @@ class BlackJack:
         self.start = True # Initialize start, used to keep track of opening actions at each new game
         self.playerAceCount = 0 # Initialize playerAceCount, used to determine if player has gotten an Ace
         self.dealerAceCount = 0 # Initialize dealerAceCount, used to determine if dealer has gotten an Ace
-        self.winner = None
+        self.winner = None # Initialize winner, used to determine which winning text is output
 
         for index in range(len(assets)): # Loop through every single url path in the assets list
             card = game.image.load(assets[index]) # load the url path to the image in the variable card
             size = card.get_size() # Get the size of the card
             if size != (200,250): # Check to ensure uniformity in size
                 card = game.transform.scale(card,(200,250)) # Resize the card if they are not the same
-            if index == 0: # If indez is 0 it is the ace card
+            if index == 0: # If index is 0 it is the ace card
                 value = [1,11] # Put the two ace values
             elif index < 9: # Check if the index is less than 0
                 value = [index + 1] # have the value variable be the index + 1 and put that in a list
@@ -48,15 +47,17 @@ class BlackJack:
         card = self.deck[index] # Get the card at that key
         return card # Return the card
 
-    def checkScore(self, score, aces):
-        if score > 21 and aces > 0:
-            score -= 10
-            aces -= 1
-        elif score > 21:
-            self.determineWinner()
-        elif score == 21:
-            self.determineWinner()
-        return score, aces
+    def checkScore(self, score, aces, player = False):
+        if score > 21 and aces > 0: # Check if the score is greater than 21 and see if any aces are in the hand
+            score -= 10 # Subtract the score by 10 turning the ace from an 11 to a 1
+            aces -= 1 # Subtract the amount of aces by 1
+        elif score > 21: # Check if score is greater than or equal to 21
+            self.determineWinner() # Call determineWinner function
+        elif score == 21 and player: # Check if the score is 21 for the player
+            self.hold() # Call hold as player has 21
+        elif score == 21: # Check if the score is 21 for the dealer
+            self.determineWinner() # call determineWinner function
+        return score, aces # Return the score and the number of aces
 
     
     def addPlayerCard(self): # Function to add a card for the player
@@ -77,16 +78,15 @@ class BlackJack:
             else:
                 self.playerScore += card[1][0] # Add the value of the card (non ace)
             
-            self.playerScore, self.playerAceCount = self.checkScore(self.playerScore, self.playerAceCount)
-            print('Player', self.playerScore)
+            self.playerScore, self.playerAceCount = self.checkScore(self.playerScore, self.playerAceCount, True) # Send the score and aces to checkScore to see if game is over
 
     def addDealerCard(self, secondCard = False):
-        if ((self.dealerTurn and self.dealerScore <= 16) or self.start):
+        if ((self.dealerTurn and self.dealerScore <= 16) or self.start): # Check to make sure it is the dealers turn and that dealers score isnt over 17
             card = self.getCard() # Call the get card function to get a card
             x,y = self.center(card[0], True) # Send the first value of the card, the picture, to the center function
             x += (50 * self.dealerCards) # Increase the x axis coordinates by 50 for each card already on screen for the dealer
             if secondCard: # Check if this is the second card given to the dealer
-                self.secondDealerCard = card
+                self.secondDealerCard = card # set secondDealerCard to the current card
                 cardBack = game.image.load('./BlackJackAssets/CardBack.svg') # Load the image with the back of a playing card
                 cardBack = game.transform.scale(cardBack,(200,250)) # Scale the image to the correct size
                 self.screen.blit(cardBack, (x,y)) # Put the card on the screen
@@ -106,7 +106,7 @@ class BlackJack:
             else:
                 self.dealerScore += card[1][0] # Add the value of the card (non ace)     
              
-            self.checkScore(self.dealerScore, self.dealerAceCount)
+            self.dealerScore, self.dealerAceCount = self.checkScore(self.dealerScore, self.dealerAceCount) # Send the score and aces to checkScore to see if game is over
         else:
             self.dealerTurn = False # Set dealerTurn to false if dealer hand is over 17
             
@@ -125,15 +125,12 @@ class BlackJack:
         return width, height # Return the width and the height
     
     def hold(self):
-        if self.playerTurn:
+        if self.playerTurn: # Check if it is the players turn
             self.playerTurn = False # Change playersTurn to false
             self.dealerTurn = True # Change dealersTurn to true
-            print('hold calling flip')
-            self.flip()
+            self.flip() # Call flip to flip over the card
             while self.dealerTurn: # While it is the dealers turn
-                print('giving dealer a card')
                 self.addDealerCard() # Call addDealerCard function to give dealer a card
-                print('dealerScore', self.dealerScore)
             self.determineWinner() # Call self.determineWinner to determine who won the game
 
 
@@ -146,29 +143,24 @@ class BlackJack:
                     self.addDealerCard(True) # Call addDealerCard with True makes the card back show 
                 else:
                     self.addDealerCard() # Call addDealerCard function
-            print(self.playerScore, self.dealerScore)
-            if self.playerScore == 21:
-                self.determineWinner()
-            elif self.dealerScore == 21:
-                self.screen.blit(self.secondDealerCard[0], (self.secondDealerCardX, self.secondDealerCardY))
-                self.determineWinner()
+            self.playerScore, self.playerAceCount = self.checkScore(self.playerScore, self.playerAceCount) # Check if player has blackjack after initial cards
+            self.dealerScore, self.dealerAceCount = self.checkScore(self.dealerScore, self.dealerAceCount) # Check if dealer has blackjack after initial cards
         self.start = False # Change start to false
 
        
     def determineWinner(self):
         # Playerwin = 0
         # Dealerwin = 1
-        self.dealerTurn = False
-        self.playerTurn = False
-        if not self.secondDealerCardFlip:
-            print('determine win calling flip')
-            self.flip()
+        self.dealerTurn = False # Ensure dealer turn is false
+        self.playerTurn = False # Ensure player turn is false
+        if not self.secondDealerCardFlip: # Check if the card has not been flipped
+            self.flip() # Call flip to flip the card
         if self.playerScore > 21: # Check if player score is over 21
             self.winner = 1 # Set winner to dealer
         elif self.dealerScore > 21: # Check if dealer score is over 21
             self.winner = 0 # Set winner to player
-        elif self.playerScore == self.dealerScore:
-            self.winner = 2
+        elif self.playerScore == self.dealerScore: # Check if the dealer and player have the same score
+            self.winner = 2 # Set winner to tie
         else:
             if self.playerScore > self.dealerScore: # Check if player has higher score than dealer
                 self.winner = 0 # Set winner to player
@@ -176,13 +168,9 @@ class BlackJack:
                 self.winner = 1 # Set winner to dealer
         return self.winner # Return self.winner
     
-        # centerBox = CenterBox(self.screen,self.screenHeight, self.screenWidth, (211, 211, 211), self.winner)
-        # height, width, xCoordinate, yCoordinate = centerBox.getInfo()
-        # Btn = Button(self.screen, (85,86,99), height, width, xCoordinate, yCoordinate)
-        # Btn.write('Replay', 15)
-        # Btn.action(lambda: self.restartGame())
-    
     def restartGame(self):
+        print('Player Score', self.playerScore)
+        print('Dealer Score', self.dealerScore)
         self.playerScore = 0 # Reset the playerScore with a value of 0, used to keep track of players current score
         self.playerCards = 0 # Reset the playerCards with a value of 0, used to aid in positioning player cards on screen
         self.dealerScore = 0 # Reset the dealerScore with a value of 0, used to keep track of dealers current score
@@ -200,6 +188,6 @@ class BlackJack:
         self.startGame() # call startGame function to restart game
 
     def flip(self):
-        if not self.secondDealerCardFlip and self.secondDealerCard is not None:
-             self.screen.blit(self.secondDealerCard[0], (self.secondDealerCardX,self.secondDealerCardY))
-             self.secondDealerCardFlip = True
+        if not self.secondDealerCardFlip and self.secondDealerCard is not None: # Check if the second card has not been flipped and if the second card exists
+             self.screen.blit(self.secondDealerCard[0], (self.secondDealerCardX,self.secondDealerCardY)) # Flip over the card
+             self.secondDealerCardFlip = True # Change flipped to true
