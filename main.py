@@ -28,22 +28,23 @@ blackJack = BlackJack(screen, systemHeight - 100, systemWidth - 100)
 
 hitButton = Button(screen, (85, 86, 99), systemHeight // 16, (systemWidth * 0.2) // 2, systemHeight // 16, (systemWidth * 0.2) // 2) # Initialize and create the hit button
 holdButton = Button(screen,(85, 86, 99), systemHeight // 16, (systemWidth * 0.2) // 2, systemHeight // 16, ((systemWidth * 0.2) // 2) * 2) # Initialize and create the stand button
-quitButton = Button(screen, (85, 86, 99), systemHeight // 16, (systemWidth * 0.2) // 2, systemHeight // 16, ((systemWidth * 0.2) // 2) * 3) # Initialize and create the quit button
+restartButton = Button(screen,(85, 86, 99), systemHeight // 16, (systemWidth * 0.2) // 2, systemHeight // 16, ((systemWidth * 0.2) // 2) * 3) # Initialize and create the stand button
+quitButton = Button(screen, (85, 86, 99), systemHeight // 16, (systemWidth * 0.2) // 2, systemHeight // 16, ((systemWidth * 0.2) // 2) * 4) # Initialize and create the quit button
 
 hitButton.write('Hit', 15) # Add text to the hit button
 holdButton.write('Hold', 15) # Add text to the stand button
+restartButton.write('Restart', 15) # Add text to the restart button
 quitButton.write('Quit', 15) # Add text to the quit button
-
 while gameRunning:
     hitButton.action(lambda : blackJack.addPlayerCard()) # Initalize the hit buttons ability
-    holdButton.action( lambda: blackJack.hold()) # initialize the stand buttons ability
+    holdButton.action( lambda: blackJack.hold()) # Initialize the stand buttons ability
+    restartButton.action(lambda: blackJack.restartGame())
     for event in game.event.get():
         if event.type == game.QUIT:
             gameRunning = False
-    if blackJack.determineWinner() == 1 or blackJack.determineWinner == 0:
+    if blackJack.winner == 1 or blackJack.winner == 0 or blackJack.winner == 2:
         centerBox = CenterBox(screen,systemHeight - 100, systemWidth - 100, (211, 211, 211), blackJack.determineWinner())
         height, width, xCoordinate, yCoordinate = centerBox.getInfo()
         Btn = Button(screen, (85,86,99), height, width, xCoordinate, yCoordinate)
         Btn.write('Replay', 15)
-        Btn.action(lambda: blackJack.restartGame())
     game.display.update() # update the content that appears on the screen

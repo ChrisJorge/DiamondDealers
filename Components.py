@@ -63,8 +63,10 @@ class CenterBox:
         font = game.font.SysFont('Calibri', size, True, False) # Initialize the type of font
         if winner == 0:
             self.text = font.render('Player wins',True, (0,0,0)) # Render the text
-        else:
+        elif winner == 1:
             self.text = font.render('Dealer wins',True, (0,0,0)) # Render the text
+        elif winner == 2:
+            self.text = font.render('Tie',True, (0,0,0)) # Render the text
         self.screen.blit(self.text, [((self.text.get_width() // 2) + (centerWidth + xCoordinate // 12.5)), ((self.text.get_height() // 2) + ((centerHeight - (yCoordinate // 2.5))))])
 
     def getInfo(self,):
