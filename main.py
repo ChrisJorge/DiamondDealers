@@ -42,7 +42,7 @@ while gameRunning:
     for event in game.event.get():
         if event.type == game.QUIT:
             gameRunning = False
-    if blackJack.winner == 1 or blackJack.winner == 0 or blackJack.winner == 2:
+    if blackJack.winner == 1 or blackJack.winner == 0 or blackJack.winner  == 2:
         centerBox = CenterBox(screen,systemHeight - 100, systemWidth - 100, (211, 211, 211), blackJack.determineWinner())
         height, width, xCoordinate, yCoordinate = centerBox.getInfo()
         Btn = Button(screen, (85,86,99), height, width, xCoordinate, yCoordinate)

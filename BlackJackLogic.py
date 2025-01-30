@@ -200,6 +200,6 @@ class BlackJack:
         self.startGame() # call startGame function to restart game
 
     def flip(self):
-        if not self.secondDealerCardFlip:
+        if not self.secondDealerCardFlip and self.secondDealerCard is not None:
              self.screen.blit(self.secondDealerCard[0], (self.secondDealerCardX,self.secondDealerCardY))
              self.secondDealerCardFlip = True

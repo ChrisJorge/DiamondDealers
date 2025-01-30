@@ -45,8 +45,6 @@ class CenterBox:
         self.rectangle = game.Rect(self.xCoordinate, self.yCoordinate, self.width, self.height)
         game.draw.rect(self.screen, self.colorRGB, self.rectangle)
         self.write(self.screenHeight // 2, self.screenWidth // 2, self.xCoordinate, self.yCoordinate, winner, 25)
-        # self.button = Button(screen, (85, 86, 99) ,self.height // 2, self.width // 2, self.xCoordinate + self.width // 3.75, self.yCoordinate + self.height // 3.5)
-        # self.button.write('Replay', 15)
     
     def center(self,):
         self.centerHeight = self.screenHeight // 2
