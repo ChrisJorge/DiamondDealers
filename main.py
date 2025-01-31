@@ -49,4 +49,4 @@ while gameRunning:
         # centerBox = CenterBox(screen,systemHeight - 100, systemWidth - 100, (78, 106, 84) , blackJack.determineWinner()) 
         # height, width, xCoordinate, yCoordinate = centerBox.getInfo()
         Write(screen, 25, blackJack.determineWinner(), systemWidth + (systemWidth * 0.2), systemHeight)
-    game.display.update() # update the content that appears on the screen
+    game.display.update() # update the content that appears on the screen 

@@ -157,12 +157,13 @@ class BlackJack:
         self.playerTurn = False # Ensure player turn is false
         if not self.secondDealerCardFlip: # Check if the card has not been flipped
             self.flip() # Call flip to flip the card
-        if self.playerScore > 21: # Check if player score is over 21
+
+        if self.playerScore == self.dealerScore: # Check if both players have the same score
+            self.winner = 2 # Set winner to tie
+        elif self.playerScore > 21: # Check if player score is over 21
             self.winner = 1 # Set winner to dealer
         elif self.dealerScore > 21: # Check if dealer score is over 21
             self.winner = 0 # Set winner to player
-        elif self.playerScore == self.dealerScore: # Check if the dealer and player have the same score
-            self.winner = 2 # Set winner to tie
         else:
             if self.playerScore > self.dealerScore: # Check if player has higher score than dealer
                 self.winner = 0 # Set winner to player
