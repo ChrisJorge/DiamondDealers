@@ -33,39 +33,16 @@ class Button():
             if game.mouse.get_pressed()[0] == 0: # Check if button is no longer being clicked
                 self.clicked = False # Set self.clicked to false
 
-
-class CenterBox:
-    def __init__(self, screen, screenHeight, screenWidth , colorRGB, winner):
-        self.screen = screen
-        self.screenHeight = screenHeight
-        self.screenWidth = screenWidth
-        self.colorRGB = colorRGB
-        self.winner = winner
-        self.height, self.width, self.yCoordinate, self.xCoordinate = self.center()
-        self.rectangle = game.Rect(self.xCoordinate, self.yCoordinate, self.width, self.height)
-        game.draw.rect(self.screen, self.colorRGB, self.rectangle)
-        self.write(self.screenHeight // 2, self.screenWidth // 2, self.xCoordinate, self.yCoordinate, winner, 25)
-    
-    def center(self,):
-        self.centerHeight = self.screenHeight // 2
-        self.centerWidth = self.screenWidth // 2
-        topHeight = (self.centerHeight + (self.centerHeight * 0.15))
-        bottomHeight = (self.centerHeight - (self.centerHeight * 0.15))
-        height = (topHeight - bottomHeight) + self.centerWidth * 0.15
-        yCoordinate = (self.centerHeight - (height * 0.50))
-        width = height * 2
-        xCoordinate = (self.centerWidth - width // 7.25)
-        return height, width, yCoordinate, xCoordinate        
-
-    def write(self, centerHeight, centerWidth, xCoordinate, yCoordinate, winner, size):
-        font = game.font.SysFont('Calibri', size, True, False) # Initialize the type of font
-        if winner == 0:
-            self.text = font.render('Player wins',True, (0,0,0)) # Render the text
-        elif winner == 1:
-            self.text = font.render('Dealer wins',True, (0,0,0)) # Render the text
-        elif winner == 2:
-            self.text = font.render('Tie',True, (0,0,0)) # Render the text
-        self.screen.blit(self.text, [((self.text.get_width() // 2) + (centerWidth + xCoordinate // 12.5)), ((self.text.get_height() // 2) + ((centerHeight - (yCoordinate // 2.5))))])
-
-    def getInfo(self,):
-        return self.height // 2, self.width // 2, self.xCoordinate + self.width // 3.75, self.yCoordinate + self.height // 3.5
+class Write:
+    def __init__(self,screen, size, winner, screenWidth, screenHeight):
+        font = game.font.SysFont('Calibri', size, True, False)
+        match winner:
+            case 0:
+                self.text = font.render('Player wins',True, (0,0,0)) # Render the text
+            case 1:
+                self.text = font.render('Dealer wins',True, (0,0,0)) # Render the text
+            case 2:
+                self.text = font.render('Tie',True, (0,0,0)) # Render the text
+        centerWidth = screenWidth // 2
+        centerHeight = screenHeight // 2
+        screen.blit(self.text,(centerWidth - (self.text.get_width()), centerHeight - (self.text.get_height() * 2)))
