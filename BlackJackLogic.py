@@ -1,6 +1,6 @@
 import pygame as game
 import random
-
+from Components import Write 
 # Initialize an array holding the url paths to each of the images
 assets = ['./BlackJackAssets/AceDiamond.svg', './BlackJackAssets/TwoDiamond.svg', './BlackJackAssets/ThreeDiamond.svg', './BlackJackAssets/FourDiamond.svg', 
           './BlackJackAssets/FiveDiamond.svg', './BlackJackAssets/SixDiamond.svg', './BlackJackAssets/SevenDiamond.svg', './BlackJackAssets/EightDiamond.svg', 
@@ -26,6 +26,7 @@ class BlackJack:
         self.playerAceCount = 0 # Initialize playerAceCount, used to determine if player has gotten an Ace
         self.dealerAceCount = 0 # Initialize dealerAceCount, used to determine if dealer has gotten an Ace
         self.winner = None # Initialize winner, used to determine which winning text is output
+        self.write = Write(self.screen, 25, self.screenWidth + (self.screenWidth * 0.2), self.screenHeight, (78, 106, 84))
 
         for index in range(len(assets)): # Loop through every single url path in the assets list
             card = game.image.load(assets[index]) # load the url path to the image in the variable card
@@ -79,7 +80,8 @@ class BlackJack:
                     self.playerAceCount += 1 # Increase ace count by 1
             else:
                 self.playerScore += card[1][0] # Add the value of the card (non ace)
-            
+
+            self.write.score(self.playerScore, False)
             self.playerScore, self.playerAceCount = self.checkScore(self.playerScore, self.playerAceCount, True) # Send the score and aces to checkScore to see if game is over
 
     def addDealerCard(self, secondCard = False):
@@ -106,8 +108,9 @@ class BlackJack:
                     self.dealerScore += card[1][1] # Add the aces value of 11
                     self.dealerAceCount += 1 # Increase ace count by 1
             else:
-                self.dealerScore += card[1][0] # Add the value of the card (non ace)     
-             
+                self.dealerScore += card[1][0] # Add the value of the card (non ace)    
+
+            self.write.score(self.dealerScore, True)
             self.dealerScore, self.dealerAceCount = self.checkScore(self.dealerScore, self.dealerAceCount) # Send the score and aces to checkScore to see if game is over
         else:
             self.dealerTurn = False # Set dealerTurn to false if dealer hand is over 17
@@ -145,6 +148,8 @@ class BlackJack:
                     self.addDealerCard(True) # Call addDealerCard with True makes the card back show 
                 else:
                     self.addDealerCard() # Call addDealerCard function
+            self.write.score(self.playerScore, False)
+            self.write.score('??', True)
             self.playerScore, self.playerAceCount = self.checkScore(self.playerScore, self.playerAceCount) # Check if player has blackjack after initial cards
             self.dealerScore, self.dealerAceCount = self.checkScore(self.dealerScore, self.dealerAceCount) # Check if dealer has blackjack after initial cards
         self.start = False # Change start to false
@@ -157,6 +162,9 @@ class BlackJack:
         self.playerTurn = False # Ensure player turn is false
         if not self.secondDealerCardFlip: # Check if the card has not been flipped
             self.flip() # Call flip to flip the card
+
+        self.write.score(self.playerScore, False)
+        self.write.score(self.dealerScore, True)
 
         if self.playerScore == self.dealerScore: # Check if both players have the same score
             self.winner = 2 # Set winner to tie

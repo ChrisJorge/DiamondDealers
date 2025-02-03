@@ -26,6 +26,7 @@ game.draw.rect(screen, (211, 211, 211), game.Rect(0,0,systemWidth * 0.2, systemH
 
 blackJack = BlackJack(screen, systemHeight - 100, systemWidth - 100)
 winnerText = Write(screen, 25, systemWidth + (systemWidth * 0.2), systemHeight)
+
 hitButton = Button(screen, (85, 86, 99), systemHeight // 16, (systemWidth * 0.2) // 2, systemHeight // 16, (systemWidth * 0.2) // 2) # Initialize and create the hit button
 holdButton = Button(screen,(85, 86, 99), systemHeight // 16, (systemWidth * 0.2) // 2, systemHeight // 16, ((systemWidth * 0.2) // 2) * 2) # Initialize and create the stand button
 restartButton = Button(screen,(85, 86, 99), systemHeight // 16, (systemWidth * 0.2) // 2, systemHeight // 16, ((systemWidth * 0.2) // 2) * 3) # Initialize and create the stand button

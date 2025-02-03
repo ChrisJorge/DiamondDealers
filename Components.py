@@ -34,21 +34,37 @@ class Button():
                 self.clicked = False # Set self.clicked to false
 
 class Write:
-    def __init__(self, screen, size, screenWidth, screenHeight):
+    def __init__(self, screen, size, screenWidth, screenHeight, color = False):
         self.font = game.font.SysFont('Calibri', size, True, False)
         self.screen = screen
         self.screenWidth = screenWidth
         self.screenHeight = screenHeight
+        self.centerWidth = self.screenWidth // 2
+        self.centerHeight = self.screenHeight // 2
+        self.color = color
     
     def Winner(self, winner):
         match winner:
             case 0:
-                self.text = self.font.render('Player wins',True, (0,0,0)) # Render the text
+                text = self.font.render('Player wins',True, (0,0,0)) # Render the text
             case 1:
-                self.text = self.font.render('Dealer wins',True, (0,0,0)) # Render the text
+                text = self.font.render('Dealer wins',True, (0,0,0)) # Render the text
             case 2:
-                self.text = self.font.render('Tie',True, (0,0,0)) # Render the text
+                text = self.font.render('Tie',True, (0,0,0)) # Render the text
 
-        centerWidth = self.screenWidth // 2
-        centerHeight = self.screenHeight // 2
-        self.screen.blit(self.text,(centerWidth - (self.text.get_width()), centerHeight - (self.text.get_height() * 2)))
+        
+        self.screen.blit(text,(self.centerWidth - (text.get_width()), self.centerHeight - (text.get_height() * 2)))
+    
+    def score(self,score, top):
+        if top:
+            text = self.font.render(f'Dealer Score: {score}', True, (0,0,0))
+            self.remove(self.centerWidth - (text.get_width() // 2) + 5, self.centerHeight  // 4 - (text.get_height()), text.get_width(), text.get_height())
+            self.screen.blit(text,(self.centerWidth - (text.get_width() // 2), self.centerHeight // 4 - (text.get_height() )))
+        else:
+            text = self.font.render(f'Player Score: {score}', True, (0,0,0))
+            self.remove(self.centerWidth - (text.get_width() // 2) + 5, self.centerHeight * 1.75 + (text.get_height()), text.get_width(), text.get_height())
+            self.screen.blit(text,(self.centerWidth - (text.get_width() // 2), self.centerHeight * 1.75 + (text.get_height())))
+
+    def remove(self, xCoordinate, yCoordinate, width, height):
+        rectangle =  game.Rect(xCoordinate, yCoordinate, width, height)
+        game.draw.rect(self.screen, self.color, rectangle)
