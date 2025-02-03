@@ -25,6 +25,7 @@ screen.fill((78, 106, 84)) # Set the background color
 game.draw.rect(screen, (211, 211, 211), game.Rect(0,0,systemWidth * 0.2, systemHeight)) # Create the gray bar on the left side which will contain the options 
 
 blackJack = BlackJack(screen, systemHeight - 100, systemWidth - 100)
+winnerText = Write(screen, 25, systemWidth + (systemWidth * 0.2), systemHeight)
 
 hitButton = Button(screen, (85, 86, 99), systemHeight // 16, (systemWidth * 0.2) // 2, systemHeight // 16, (systemWidth * 0.2) // 2) # Initialize and create the hit button
 holdButton = Button(screen,(85, 86, 99), systemHeight // 16, (systemWidth * 0.2) // 2, systemHeight // 16, ((systemWidth * 0.2) // 2) * 2) # Initialize and create the stand button
@@ -45,8 +46,6 @@ while gameRunning:
     for event in game.event.get(): # Check for events happening on the game terminal
         if event.type == game.QUIT: # Check if the event is quit (clicking the red exit button)
             gameRunning = False # Turn the game off
-    if blackJack.winner == 1 or blackJack.winner == 0 or blackJack.winner  == 2: # Check if someone has won the game
-        # centerBox = CenterBox(screen,systemHeight - 100, systemWidth - 100, (78, 106, 84) , blackJack.determineWinner()) 
-        # height, width, xCoordinate, yCoordinate = centerBox.getInfo()
-        Write(screen, 25, blackJack.determineWinner(), systemWidth + (systemWidth * 0.2), systemHeight)
+    if blackJack.winner  == 1 or blackJack.winner == 0 or blackJack.winner  == 2: # Check if someone has won the game
+        winnerText.Winner(blackJack.winner)
     game.display.update() # update the content that appears on the screen 
