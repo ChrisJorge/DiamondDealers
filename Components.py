@@ -34,15 +34,21 @@ class Button():
                 self.clicked = False # Set self.clicked to false
 
 class Write:
-    def __init__(self,screen, size, winner, screenWidth, screenHeight):
-        font = game.font.SysFont('Calibri', size, True, False)
+    def __init__(self, screen, size, screenWidth, screenHeight):
+        self.font = game.font.SysFont('Calibri', size, True, False)
+        self.screen = screen
+        self.screenWidth = screenWidth
+        self.screenHeight = screenHeight
+    
+    def Winner(self, winner):
         match winner:
             case 0:
-                self.text = font.render('Player wins',True, (0,0,0)) # Render the text
+                self.text = self.font.render('Player wins',True, (0,0,0)) # Render the text
             case 1:
-                self.text = font.render('Dealer wins',True, (0,0,0)) # Render the text
+                self.text = self.font.render('Dealer wins',True, (0,0,0)) # Render the text
             case 2:
-                self.text = font.render('Tie',True, (0,0,0)) # Render the text
-        centerWidth = screenWidth // 2
-        centerHeight = screenHeight // 2
-        screen.blit(self.text,(centerWidth - (self.text.get_width()), centerHeight - (self.text.get_height() * 2)))
+                self.text = self.font.render('Tie',True, (0,0,0)) # Render the text
+
+        centerWidth = self.screenWidth // 2
+        centerHeight = self.screenHeight // 2
+        self.screen.blit(self.text,(centerWidth - (self.text.get_width()), centerHeight - (self.text.get_height() * 2)))
