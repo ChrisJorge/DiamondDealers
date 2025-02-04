@@ -56,8 +56,8 @@ class BlackJack:
             self.determineWinner() # Call determineWinner function
         elif score == 21 and player: # Check if the score is 21 for the player
             self.hold() # Call hold as player has 21
-        elif score == 21 and player and self.start: # Check if player has 21 and it is the first 2 given cards
-            self.determineWinner() # Call determineWinner function
+        # elif score == 21 and player and self.start: # Check if player has 21 and it is the first 2 given cards
+        #     self.determineWinner() # Call determineWinner function
         elif score == 21: # Check if the score is 21 for the dealer
             self.determineWinner() # Call determineWinner function
         return score, aces # Return the score and the number of aces
@@ -83,6 +83,7 @@ class BlackJack:
 
             self.write.score(self.playerScore, False)
             self.playerScore, self.playerAceCount = self.checkScore(self.playerScore, self.playerAceCount, True) # Send the score and aces to checkScore to see if game is over
+            self.write.score(self.playerScore, False)
 
     def addDealerCard(self, secondCard = False):
         if ((self.dealerTurn and self.dealerScore <= 16) or self.start): # Check to make sure it is the dealers turn and that dealers score isnt over 17
@@ -110,8 +111,8 @@ class BlackJack:
             else:
                 self.dealerScore += card[1][0] # Add the value of the card (non ace)    
 
-            self.write.score(self.dealerScore, True)
             self.dealerScore, self.dealerAceCount = self.checkScore(self.dealerScore, self.dealerAceCount) # Send the score and aces to checkScore to see if game is over
+            self.write.score(self.dealerScore, True)
         else:
             self.dealerTurn = False # Set dealerTurn to false if dealer hand is over 17
             
@@ -150,8 +151,8 @@ class BlackJack:
                     self.addDealerCard() # Call addDealerCard function
             self.write.score(self.playerScore, False)
             self.write.score('??', True)
-            self.playerScore, self.playerAceCount = self.checkScore(self.playerScore, self.playerAceCount) # Check if player has blackjack after initial cards
-            self.dealerScore, self.dealerAceCount = self.checkScore(self.dealerScore, self.dealerAceCount) # Check if dealer has blackjack after initial cards
+        self.playerScore, self.playerAceCount = self.checkScore(self.playerScore, self.playerAceCount) # Check if player has blackjack after initial cards
+        self.dealerScore, self.dealerAceCount = self.checkScore(self.dealerScore, self.dealerAceCount) # Check if dealer has blackjack after initial cards
         self.start = False # Change start to false
 
        
@@ -163,8 +164,18 @@ class BlackJack:
         if not self.secondDealerCardFlip: # Check if the card has not been flipped
             self.flip() # Call flip to flip the card
 
-        self.write.score(self.playerScore, False)
-        self.write.score(self.dealerScore, True)
+        if self.playerCards == 2 and self.playerScore == 21:
+            self.write.score(f'{self.playerScore} (Black Jack)', False)
+            self.write.score(self.dealerScore, True)
+        elif self.dealerCards == 2 and self.dealerScore == 21:
+            self.write.score(f'{self.dealerScore} (Black Jack)', True)
+            self.write.score(self.playerScore, False)
+        elif (self.dealerCards == 2 and self.dealerScore == 21) and (self.playerCards == 2 and self.playerScore == 21):
+            self.write.score(f'{self.playerScore} (Black Jack)', False)
+            self.write.score(f'{self.dealerScore} (Black Jack)', True)
+        else:
+            self.write.score(self.dealerScore, True)
+            self.write.score(self.playerScore, False)
 
         if self.playerScore == self.dealerScore: # Check if both players have the same score
             self.winner = 2 # Set winner to tie

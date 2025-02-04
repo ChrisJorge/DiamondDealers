@@ -58,7 +58,7 @@ class Write:
     def score(self,score, top):
         if top:
             text = self.font.render(f'Dealer Score: {score}', True, (0,0,0))
-            self.remove(self.centerWidth - (text.get_width() // 2) + 5, self.centerHeight  // 4 - (text.get_height()), text.get_width(), text.get_height())
+            self.remove(self.centerWidth - (text.get_width() // 2) + 5, self.centerHeight  // 4 - (text.get_height() ), text.get_width(), text.get_height())
             self.screen.blit(text,(self.centerWidth - (text.get_width() // 2), self.centerHeight // 4 - (text.get_height() )))
         else:
             text = self.font.render(f'Player Score: {score}', True, (0,0,0))
