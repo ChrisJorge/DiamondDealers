@@ -81,7 +81,6 @@ class BlackJack:
             else:
                 self.playerScore += card[1][0] # Add the value of the card (non ace)
 
-            self.write.score(self.playerScore, False)
             self.playerScore, self.playerAceCount = self.checkScore(self.playerScore, self.playerAceCount, True) # Send the score and aces to checkScore to see if game is over
             self.write.score(self.playerScore, False)
 
