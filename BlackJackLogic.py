@@ -49,15 +49,16 @@ class BlackJack:
         return card # Return the card
 
     def checkScore(self, score, aces, player = False):
-        if score > 21 and aces > 0: # Check if the score is greater than 21 and see if any aces are in the hand
+
+        if score == 21 and self.start:
+            self.determineWinner()
+        elif score > 21 and aces > 0: # Check if the score is greater than 21 and see if any aces are in the hand
             score -= 10 # Subtract the score by 10 turning the ace from an 11 to a 1
             aces -= 1 # Subtract the amount of aces by 1
         elif score > 21: # Check if score is greater than or equal to 21
             self.determineWinner() # Call determineWinner function
         elif score == 21 and player: # Check if the score is 21 for the player
             self.hold() # Call hold as player has 21
-        # elif score == 21 and player and self.start: # Check if player has 21 and it is the first 2 given cards
-        #     self.determineWinner() # Call determineWinner function
         elif score == 21: # Check if the score is 21 for the dealer
             self.determineWinner() # Call determineWinner function
         return score, aces # Return the score and the number of aces
