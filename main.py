@@ -36,6 +36,7 @@ quitButton.write('Quit', 15) # Add text to the quit button
 #____________________ Initialize Necessary class logic  _________________________________________
 blackJack = BlackJack(screen, systemHeight - 100, systemWidth - 100) # Black jack is used to output the cards on screen and handle all of the calculations behind the sceen
 winnerText = Write(screen, 25, systemWidth + (systemWidth * 0.2), systemHeight) # winnerText is used to ouput who won the game to the screen, is used in conjunction with BlackJack
+
 #_____________________ Run the game _________________________________________________
 gameRunning = True # Initialize a variable indicating if the game is currently running
 while gameRunning:
