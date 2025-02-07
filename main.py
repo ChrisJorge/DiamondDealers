@@ -20,6 +20,7 @@ screen = game.display.set_mode((systemWidth - 100,systemHeight - 100))  # Create
 
 screen.fill((78, 106, 84)) # Set the background color 
 
+
 #____________________ Initialize Content On Screen _________________________________________
 game.draw.rect(screen, (211, 211, 211), game.Rect(0,0,systemWidth * 0.2, systemHeight)) # Create the gray bar on the left side which will contain the options 
 
@@ -32,6 +33,10 @@ hitButton.write('Hit', 15) # Add text to the hit button
 holdButton.write('Hold', 15) # Add text to the stand button
 restartButton.write('Restart', 15) # Add text to the restart button
 quitButton.write('Quit', 15) # Add text to the quit button
+
+
+test = game.image.load('./BlackJackAssets/Component1.svg')
+screen.blit(test, (300,300))
 
 #____________________ Initialize Necessary class logic  _________________________________________
 blackJack = BlackJack(screen, systemHeight - 100, systemWidth - 100) # Black jack is used to output the cards on screen and handle all of the calculations behind the sceen
