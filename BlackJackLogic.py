@@ -10,6 +10,7 @@ class BlackJack:
         self.screenHeight = screenHeight # Used to get the height of the game screen
         self.screenWidth = screenWidth # Used to get the width of the game screen
         self.playerMoney = 200
+        self.betList = []
         self.bettingActive = True
         self.currentBet = 0 # Used to keep track of the current bet
         self.open = False
@@ -44,15 +45,23 @@ class BlackJack:
         self.playerBetText = WriteText(self.screen, 35, 'Player Bet: 0', (255,255,255), (106,84,78), 5, self.screenHeight - 175)
         self.playerScoreText =  WriteText(self.screen, 35, 'Player Score: N/A', (255,255,255), (106,84,78), 5, self.screenHeight - 115)
         self.DealerScoreText =  WriteText(self.screen, 35, 'Dealer Score: N/A', (255,255,255), (106,84,78), 5, self.screenHeight - 55)
+        self.startText = WriteText(self.screen,50,'Place A Bet To Begin', (255,255,255), (78, 106, 84), self.screenWidth // 2 - 200, self.screenHeight // 2 - 50)
 
         self.standButton = Button(self.screen, (90,90,90), 100, 150, self.screenWidth // 2 + 50, self.screenHeight - 190) # Create a button to stand
-        self.standButton.write('Stand', 25, (255,255,255)) # call write to write text on the button
+        self.standButton.write('Stand', 35, (255,255,255)) # call write to write text on the button
 
         self.hitButton = Button(self.screen, (90,90,90), 100, 150, self.screenWidth // 2 - 200, self.screenHeight - 190) # Create a button to hit
-        self.hitButton.write('Hit', 25, (255,255,255)) # call write to write text on the button
+        self.hitButton.write('Hit', 35, (255,255,255)) # call write to write text on the button
 
         self.helpButton = Button(self.screen, (78, 106, 84), 60, 50, 0, 0)
         self.helpButton.write('?', 40, (255,255,255))
+
+        self.confirmBetButton = Button(self.screen, (90,90,90), 100,150, self.screenWidth // 2 - 200, self.screenHeight - 350)
+        self.confirmBetButton.write('Confirm', 35, (255,255,255))
+
+        self.removeBetButton = Button(self.screen, (90,90,90), 100, 150, self.screenWidth // 2 + 50, self.screenHeight - 350)
+        self.removeBetButton.write('Remove', 35, (255,255,255))
+
 
 
         # self.helpRectangle = game.Rect(self.screenWidth // 4, 0 + self.screenHeight // 5, self.screenWidth // 2, self.screenHeight // 2)
@@ -71,33 +80,53 @@ class BlackJack:
     def placeSingleBet(self): # Used to increase the current bet by $1
         if self.bettingActive and self.playerMoney - 1 >= 0: # Check if betting is True and the player has money
             self.currentBet += 1 # Increase bet by 1
+            self.betList.append(1)
             self.playerMoney -= 1 # Decrease the playersMoney by 1
-            self.updateInformation('money') # Call updateInformation to display the new balance on the screen
+            self.updateInformation('money+bet') # Call updateInformation to display the new balance on the screen
         
     def placeFiveBet(self): # Used to increase the current bet by $5
         if self.bettingActive and self.playerMoney - 5 >= 0: # Check if betting is True and player has money
             self.currentBet += 5 # Increase bet by 5
+            self.betList.append(5)
             self.playerMoney -= 5 # Decrease the playersMoney by 5
-            self.updateInformation('money') # Call updateInformation to dsiplay the new balance on the screen
+            self.updateInformation('money+bet') # Call updateInformation to dsiplay the new balance on the screen
 
     def placeTenBet(self): # Used to increase the current bet by $10
         if self.bettingActive and self.playerMoney - 10 >= 0: # Check if betting is True and player has money
             self.currentBet += 10 # Increase bet by 10
+            self.betList.append(10)
             self.playerMoney -= 10 # Decrease the playersMoney by 10
-            self.updateInformation('money') # Call updateInformation to display the new balance on the screen
+            self.updateInformation('money+bet') # Call updateInformation to display the new balance on the screen
 
     def placeTwentyFiveBet(self): # Used to increase the current bet by $25
         if self.bettingActive and self.playerMoney - 25 >= 0: # Check if betting is True and player has money
             self.currentBet += 25 # Increase bet by 25
+            self.betList.append(25)
             self.playerMoney -= 25 # Decrease the playersMoney by 25
-            self.updateInformation('money') # Call updateInformation to display the new balance on the screen
+            self.updateInformation('money+bet') # Call updateInformation to display the new balance on the screen
     
-
+    def removeBet(self):
+        if len(self.betList) > 0:
+            removed = self.betList.pop()
+            self.playerMoney += removed
+            self.currentBet -= removed
+            self.updateInformation('money-bet')
+    
     def updateInformation(self, information):
 
         match(information):
-            case 'money':
+            case 'money+bet':
                 self.playerMoneyText.update(f'Money: ${self.playerMoney}')
+                self.startText.update(f'Current Bet: ${self.currentBet}', 90)
+                self.playerBetText.update(f'Player Bet: ${self.currentBet}')
+            case 'money-bet':
+                self.playerMoneyText.update(f'Money: ${self.playerMoney}')
+                self.playerBetText.update(f'Player Bet: ${self.currentBet}')
+                if self.currentBet > 0:
+                     self.startText.update(f'Current Bet: ${self.currentBet}', 90)
+                else:
+                     self.startText.update(f'Place A Bet To Begin', 90)
+
             case 'start':
                 pass
                 # playerMoneyRectangle = Button(self.screen, (106,84,78), self.screenHeight // 15, self.screenWidth // 5,self.screenWidth - 400, self.screenHeight - 85)

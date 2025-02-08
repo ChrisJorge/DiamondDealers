@@ -33,4 +33,5 @@ while gameRunning:
     blackJack.chip10Button.action(lambda: blackJack.placeTenBet())
     blackJack.chip25Button.action(lambda: blackJack.placeTwentyFiveBet())
     blackJack.helpButton.action(lambda: blackJack.toggleHelp())
+    blackJack.removeBetButton.action(lambda: blackJack.removeBet())
     game.display.update() # update the content that appears on the screen 
