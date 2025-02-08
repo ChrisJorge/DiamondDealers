@@ -93,12 +93,54 @@ class BlackJack:
             self.updateInformation('money+bet') # Call updateInformation to display the new balance on the screen
     
     def removeBet(self):
-        if len(self.betList) > 0:
+        if len(self.betList) > 0 and self.bettingActive:
             removed = self.betList.pop()
             self.playerMoney += removed
             self.currentBet -= removed
             self.updateInformation('money-bet')
+
     
+    def confirmBet(self):
+        if self.currentBet > 0:
+            self.bettingActive = False
+            numberOfTwentyFiveChips = self.getChipAmount(25, self.currentBet)
+            numberOfTenChips = self.getChipAmount(10, self.currentBet - (numberOfTwentyFiveChips * 25))
+            numberOfFiveChips = self.getChipAmount(5, self.currentBet - (numberOfTwentyFiveChips * 25 + numberOfTenChips * 10))
+            numberOfOneChips = self.getChipAmount(1, self.currentBet - (numberOfTwentyFiveChips * 25 + numberOfTenChips * 10 + numberOfFiveChips * 5))
+            self.placeChips(numberOfTwentyFiveChips, numberOfTenChips, numberOfFiveChips, numberOfOneChips)
+            print('25', numberOfTwentyFiveChips)
+            print('10', numberOfTenChips)
+            print('5', numberOfFiveChips)
+            print('1', numberOfOneChips)
+
+        else:
+            self.startText.update('Bet Cannot Be Zero', 45)
+
+
+    def getChipAmount(self, chipType, bet):
+        temp = bet % chipType
+        tempBet = bet - temp
+        amount = tempBet // chipType
+        return amount
+    
+    def placeChips(self, numberOfTwentyFiveChips, numberOfTenChips, numberOfFiveChips, numberOfOneChips):
+        xPosition = self.screenWidth // 2 - 100
+        yPosition = self.screenHeight - 300
+        rectangle = game.Rect(0,100, self.screenWidth, self.screenHeight - 300)
+        game.draw.rect(self.screen, (78, 106, 84), rectangle)
+        for _ in range(numberOfTwentyFiveChips):
+            xPosition += 15
+            self.screen.blit(self.chip25, (xPosition, yPosition))
+        for _ in range(numberOfTenChips):
+            xPosition += 15
+            self.screen.blit(self.chip10, (xPosition, yPosition))
+        for _ in range(numberOfFiveChips):
+            xPosition += 15
+            self.screen.blit(self.chip5, (xPosition, yPosition))
+        for _ in range(numberOfOneChips):
+            xPosition += 15
+            self.screen.blit(self.chip1, (xPosition, yPosition))
+
     def updateInformation(self, information):
 
         match(information):
@@ -116,7 +158,6 @@ class BlackJack:
 
     def toggleHelp(self):
         self.open = not self.open
-
         if self.open:
             self.helpRectangle = game.Rect(self.screenWidth // 4, 0 + self.screenHeight // 5, self.screenWidth // 2, self.screenHeight // 2)
             game.draw.rect(self.screen, (255,255,255), self.helpRectangle)
