@@ -1,5 +1,5 @@
 import pygame as game
-import random
+import random, os
 from Components import WriteText, Button
 
 class BlackJack:
@@ -14,6 +14,7 @@ class BlackJack:
         self.bettingActive = True
         self.currentBet = 0 # Used to keep track of the current bet
         self.open = False
+        self.deck = {}
 
 
         self.initializeScreen()
@@ -62,7 +63,49 @@ class BlackJack:
         self.removeBetButton = Button(self.screen, (90,90,90), 100, 150, self.screenWidth // 2 + 50, self.screenHeight - 350)
         self.removeBetButton.write('Remove', 35, (255,255,255))
 
+        self.initializeCardDeck()
         self.updateInformation('start')
+    
+    def initializeCardDeck(self):
+        index = -1
+        for filename in os.listdir('./BlackJackAssets'):
+            index += 1
+            cardPath = f'./BlackJackAssets/{filename}'
+            card = game.image.load(cardPath)
+            match filename[0]:
+                case 'A':
+                    val = [1,11]
+                case '2':
+                    val = [2]
+                case '3':
+                    val = [3]
+                case '4':
+                    val = [4]
+                case '5':
+                    val = [5]
+                case '6':
+                    val = [6]
+                case '7':
+                    val = [7]
+                case '8':
+                    val = [8]
+                case '9':
+                    val = [9]
+                case '1':
+                    val = [10]
+                case 'j':
+                    val = [10]
+                case 'k':
+                    val = [10]
+                case 'q':
+                    val = [10]
+                case _:
+                    pass
+            self.deck[index] = (card,val)
+        print(self.deck)
+            
+                
+                
 
     def placeSingleBet(self): # Used to increase the current bet by $1
         if self.bettingActive and self.playerMoney - 1 >= 0: # Check if betting is True and the player has money
@@ -161,8 +204,6 @@ class BlackJack:
         if self.open:
             self.helpRectangle = game.Rect(self.screenWidth // 4, 0 + self.screenHeight // 5, self.screenWidth // 2, self.screenHeight // 2)
             game.draw.rect(self.screen, (255,255,255), self.helpRectangle)
-            # self.exitHelpButton = Button(self.screen, (255,255,255), 30, 50, self.screenWidth // 4 + self.screenWidth // 2 - 50, self.screenHeight // 5 )
-            # self.exitHelpButton.write('X', 20, (230,24,10))
             textList = ['Card Values: Face cards (jacks, queens, and kings) are worth 10, aces are worth 1 or 11. Other cards are worth their face value.', 'Dealing: The dealer gives the player two cards face up, and then receives two cards of their own one face up one face down.',
                         'Dealer Hold: Dealer hits if score is less than or equal to 16. Dealer holds at score higher than 17.','Play: Players can choose to hit (take another card) or stand (stay with their current hand).', 'Busting: If the players, or dealers, hand goes over 21 they bust (lose)',
                         'Win: Players win if their hand is closer to 21 than the dealer, or if the dealer busts.', 'Tie: If the dealer and player have the same value it is a tie.', 'Blackjack: Black jack occurs when the first two cards equal 21', 'Score: A regular win returns 2 to 1, a blackjack win returns 2.5 to 1' ]
