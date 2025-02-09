@@ -15,9 +15,9 @@ class Button():
         self.clicked = False # Initialize the buttons clicked value, used to determine if button has been clicked
         game.draw.rect(self.screen, self.color, self.rectangle) # Draw the button onto the screen
 
-    def write(self, text, size): # Function to add text to the button
+    def write(self, text, size, color = (0,0,0)): # Function to add text to the button
         font = game.font.SysFont('Calibri', size, True, False) # Initialize the type of font
-        self.text = font.render(text,True, (0,0,0)) # Render the text
+        self.text = font.render(text,True, color) # Render the text
         self.middleWidth = self.width // 2 # Get the middle of the button width wise
         self.middleHeight = self.height // 2 # Get the middle of the button height wise
         # place the text at the center of the button
@@ -33,38 +33,24 @@ class Button():
             if game.mouse.get_pressed()[0] == 0: # Check if button is no longer being clicked
                 self.clicked = False # Set self.clicked to false
 
-class Write:
-    def __init__(self, screen, size, screenWidth, screenHeight, color = False):
-        self.font = game.font.SysFont('Calibri', size, True, False)
+class WriteText:
+    def __init__(self, screen, size, text, textColor, backGroundColor, xCoordinate, yCoordinate):
+        self.font = game.font.SysFont('Times New Roman', size, True, False)
         self.screen = screen
-        self.screenWidth = screenWidth
-        self.screenHeight = screenHeight
-        self.centerWidth = self.screenWidth // 2
-        self.centerHeight = self.screenHeight // 2
-        self.color = color
-    
-    def Winner(self, winner):
-        match winner:
-            case 0:
-                text = self.font.render('Player wins',True, (0,0,0)) # Render the text
-            case 1:
-                text = self.font.render('Dealer wins',True, (0,0,0)) # Render the text
-            case 2:
-                text = self.font.render('Tie',True, (0,0,0)) # Render the text
-
+        self.textColor = textColor
+        self.backGroundColor = backGroundColor
+        textToPlace = self.font.render(text, True, self.textColor)
+        self.xCoordinate = xCoordinate
+        self.yCoordinate = yCoordinate
         
-        self.screen.blit(text,(self.centerWidth - (text.get_width()), self.centerHeight - (text.get_height() * 2)))
+        self.screen.blit(textToPlace,(self.xCoordinate, self.yCoordinate))
     
-    def score(self,score, top):
-        if top:
-            text = self.font.render(f'Dealer Score: {score}', True, (0,0,0))
-            self.remove(self.centerWidth - (text.get_width() // 2) - 5, self.centerHeight  // 4 - (text.get_height() ), text.get_width(), text.get_height())
-            self.screen.blit(text,(self.centerWidth - (text.get_width() // 2), self.centerHeight // 4 - (text.get_height() )))
-        else:
-            text = self.font.render(f'Player Score: {score}', True, (0,0,0))
-            self.remove(self.centerWidth - (text.get_width() // 2) - 5, self.centerHeight * 1.75 + (text.get_height()), text.get_width(), text.get_height())
-            self.screen.blit(text,(self.centerWidth - (text.get_width() // 2), self.centerHeight * 1.75 + (text.get_height())))
+    def update(self, text, extra = 0, minus = 0):
+        textToPlace = self.font.render(text, True, self.textColor)
+        self.remove(textToPlace.get_width() + extra, textToPlace.get_height())
+        self.screen.blit(textToPlace,(self.xCoordinate - minus, self.yCoordinate))
+    
 
-    def remove(self, xCoordinate, yCoordinate, width, height):
-        rectangle =  game.Rect(xCoordinate, yCoordinate, width + 10, height)
-        game.draw.rect(self.screen, self.color, rectangle)
+    def remove(self,width, height):
+        rectangle =  game.Rect(self.xCoordinate, self.yCoordinate, width + 25, height + 10)
+        game.draw.rect(self.screen, self.backGroundColor, rectangle)
