@@ -16,7 +16,6 @@ class BlackJack:
         self.open = False # Used to keep track if the help menu is open
         self.deck = {} # Used to create the deck of cards
         self.playerTurn = False
-        self.dealerTurn = False
         self.playerCardList = []
         self.playerScore = 0
         self.dealerCardList = []
@@ -26,6 +25,9 @@ class BlackJack:
         self.winner = None
         self.initial = True
         self.reset = False
+        self.flipped = False
+        self.secondDealerCard = None
+        self.start = True
 
         self.initializeScreen() # Call initialize screen to display the user interface
     
@@ -352,66 +354,98 @@ class BlackJack:
     def placeCard(self, card, xPosition, yPosition):
         self.screen.blit(card,(xPosition, yPosition))
 
-    def checkScore(self,score,aces,player = False):
+    def checkScore(self,score,aces, player = False):
         if score > 21 and aces:
             score -= 10
             aces -= 1
         return score, aces
     
     def checkGame(self,score,player = False):
-        if (score == 21 and player) or (score > 21 and player):
-            self.handleStayButton()
-        elif score >= 21 or score == 21:
-            self.determineWinner()
-
-    def determineWinner(self):
-        self.playerTurn == False
-        self.dealerTurn == False
+        print('Inside Check Game with score:', score, player)
+        if not self.start:
+            if (score == 21 and player) or (score > 21 and player):
+                self.handleStayButton()
+            elif score >= 21 or score == 21:
+                self.checkWinner()
 
     def handleHitButton(self):
         if self.bettingActive == False and self.playerScore < 21 and self.playerTurn:
             self.addCard(True)
     
     def startGame(self):
-        for turn in range(4):
+        print('Starting Game')
+        self.start = True
+        for turn in range(3):
             if turn % 2 == 0:
                 self.addCard(True)
             else:
                 self.addCard(False)
+        self.start = False
+        self.addDealerSecondCard()
         self.checkGame(self.playerScore, True)
         self.checkGame(self.dealerScore, False)
     
+    def flip(self):
+        if self.secondDealerCard and len(self.dealerCardList) > 1:
+            print(f'Inside flip, the length of the cards list is {len(self.dealerCardList)}')
+            xPosition = self.screenWidth // 2 - 100 + 50 
+            yPosition = 100
+            self.flipped = True
+            self.dealerCardList[1] = self.secondDealerCard
+            self.placeCard(self.secondDealerCard, xPosition, yPosition)
+            self.updateInformation('dealer')
+
+    def addDealerSecondCard(self):
+        print('Adding second dealer card')
+        card = self.chooseCard()
+        self.secondDealerCard = card[0]
+        self.dealerScore = self.increaseScore(card[1], self.dealerScore, False)
+        cardBack = game.image.load('./BlackJackAssets/back.svg')
+        cardBack = game.transform.scale(cardBack, (170,220))
+        self.dealerCardList.append(cardBack)
+        xPosition = self.screenWidth // 2 - 100 + 50 
+        yPosition = 100
+        self.placeCard(cardBack, xPosition, yPosition)
+    
     def handleStayButton(self):
+        print(f'Insinde handStayButton the length of dealer list is{len(self.dealerCardList)}')
         if self.bettingActive == False and self.playerTurn == True:
             self.stay()
     
     def stay(self):
         self.playerTurn == False
-        while self.dealerScore < 17:
+        self.flip()
+        while self.dealerScore < 17 and self.bettingActive == False:
             self.addCard(False)
-        self.checkWinner()
+        if self.winner == None:
+            self.checkWinner()
     
     def checkWinner(self):
-        print(self.playerScore, self.dealerScore)
-        self.playerTurn = False
-        if self.playerScore > 21 and self.dealerScore <= 21:
-            self.winner = 'D'
-        elif self.dealerScore > 21 and self.playerScore <= 21:
-            self.winner = 'P'
-        elif (self.playerScore == self.dealerScore):
-            self.winner = 'T'
-        elif (self.playerScore == 21 and len(self.playerCardList) == 2):
-            self.winner = 'PBJ'
-        elif (self.dealerScore == 21 and len(self.dealerCardList) == 2):
-            self.winner = 'DBJ'
-        elif self.playerScore > self.dealerScore and self.playerScore <= 21:
-            self.winner = 'P'
-        elif self.dealerScore > self.playerScore and self.dealerScore <= 21:
-            self.winner = 'D'
-        elif self.dealerScore > 21 and self.playerScore > 21:
-            self.winner = 'N'
+        
+        if self.reset == False:
+            if self.flipped == False:
+                self.flip()
 
-        self.displayWinner()
+            print(self.playerScore, self.dealerScore)
+            self.playerTurn = False
+            if self.playerScore > 21 and self.dealerScore <= 21:
+                self.winner = 'D'
+            elif self.dealerScore > 21 and self.playerScore <= 21:
+                self.winner = 'P'
+            elif (self.playerScore == self.dealerScore):
+                self.winner = 'T'
+            elif (self.playerScore == 21 and len(self.playerCardList) == 2):
+                self.winner = 'PBJ'
+            elif (self.dealerScore == 21 and len(self.dealerCardList) == 2):
+                self.winner = 'DBJ'
+            elif self.playerScore > self.dealerScore and self.playerScore <= 21:
+                self.winner = 'P'
+            elif self.dealerScore > self.playerScore and self.dealerScore <= 21:
+                self.winner = 'D'
+            elif self.dealerScore > 21 and self.playerScore > 21:
+                self.winner = 'N'
+
+            self.displayWinner()
     
     def displayWinner(self):
         match self.winner:
@@ -430,9 +464,10 @@ class BlackJack:
                 self.startText.update('Dealer Won (BlackJack), place another bet to restart', 30, 300)
             case 'N':
                 self.startText.update('Both player and dealer over 21, no one wins', 30, 300)
-            
-        # if self.reset == False:
-        self.resetGameLogic()
+        
+        print(self.winner)
+        if self.winner:
+            self.resetGameLogic()
         
 
     def resetGameLogic(self):
@@ -450,8 +485,10 @@ class BlackJack:
         self.reset = True
         self.betList = []
         self.winner = None
+        self.flipped = False
         print(f'Player score is now {self.playerScore}')
         print(f'Dealer score is now {self.dealerScore}')
+        print('______________________________________________________')
 
     def resetScreen(self):
         rectangle = game.Rect(0,100, self.screenWidth, self.screenHeight - 300) # Create a rectangle to go over the buttons for confirming and placing the bet, and the starting text
@@ -468,5 +505,3 @@ class BlackJack:
 
     #     self.helpButton = Button(self.screen, (78, 106, 84), 60, 50, 0, 0) # Create a button to act as the help button
     #     self.helpButton.write('?', 40, (255,255,255)) # Call write to write text on the button
-
-
