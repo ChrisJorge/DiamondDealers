@@ -18,7 +18,7 @@ systemHeight = systemInformation.current_h # Create a variable with the system h
 
 screen = game.display.set_mode((systemWidth - 100,systemHeight - 100))  # Create the screen (width (X), height (Y))
 
-blackJack = BlackJack(screen, systemHeight - 100, systemWidth - 100)
+blackJack = BlackJack(screen, systemHeight - 100, systemWidth - 100, 200)
 
 #_____________________ Run the game _________________________________________________
 gameRunning = True # Initialize a variable indicating if the game is currently running
@@ -35,4 +35,6 @@ while gameRunning:
     blackJack.helpButton.action(lambda: blackJack.toggleHelp())
     blackJack.removeBetButton.action(lambda: blackJack.removeBet())
     blackJack.confirmBetButton.action(lambda: blackJack.confirmBet())
+    blackJack.hitButton.action(lambda: blackJack.handleHitButton())
+    blackJack.standButton.action(lambda: blackJack.handleStayButton())
     game.display.update() # update the content that appears on the screen 

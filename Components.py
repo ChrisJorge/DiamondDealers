@@ -45,10 +45,10 @@ class WriteText:
         
         self.screen.blit(textToPlace,(self.xCoordinate, self.yCoordinate))
     
-    def update(self, text, extra = 0):
+    def update(self, text, extra = 0, minus = 0):
         textToPlace = self.font.render(text, True, self.textColor)
         self.remove(textToPlace.get_width() + extra, textToPlace.get_height())
-        self.screen.blit(textToPlace,(self.xCoordinate, self.yCoordinate))
+        self.screen.blit(textToPlace,(self.xCoordinate - minus, self.yCoordinate))
     
 
     def remove(self,width, height):
