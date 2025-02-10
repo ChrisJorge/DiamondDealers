@@ -363,8 +363,10 @@ class BlackJack:
     def checkGame(self,score,player = False):
         print('Inside Check Game with score:', score, player)
         if not self.start:
-            if (score == 21 and player) or (score > 21 and player):
-                self.handleStayButton()
+            if (score == 21 and player):
+                self.checkWinner() 
+            elif (score > 21 and player):
+                self.checkWinner()
             elif score >= 21 or score == 21:
                 self.checkWinner()
 
