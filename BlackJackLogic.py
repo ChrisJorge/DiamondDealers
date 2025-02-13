@@ -15,20 +15,22 @@ class BlackJack:
         self.currentBet = 0 # Used to keep track of the current bet
         self.open = False # Used to keep track if the help menu is open
         self.deck = {} # Used to create the deck of cards
-        self.playerTurn = False
-        self.playerCardList = []
-        self.playerScore = 0
-        self.dealerCardList = []
-        self.dealerScore = 0
-        self.playerAceCount = 0
-        self.dealerAceCount = 0
-        self.winner = None
-        self.initial = True
-        self.reset = False
-        self.flipped = False
-        self.secondDealerCard = None
-        self.start = True
-        self.dealerTurn = False
+        self.playerTurn = False # Used to control what actions the player can do
+        self.playerCardList = [] # Used to keep track of the cards the player has gotten
+        self.playerScore = 0 # Used to keep track of the players score
+        self.dealerCardList = [] # Used to keep track of the cards the dealer has gotten
+        self.dealerScore = 0 # Used to keep track of the dealers score
+        self.playerAceCount = 0 # Used to keep track of the number of aces the player has gotten
+        self.dealerAceCount = 0 # Used to keep track of the number of aces the dealer has gotten
+        self.winner = None # Used to keep track of who won the game
+        self.initial = True # Used to keep track if it is the initial bet (Used for placing items on screen)
+        self.reset = False # Used to keep track if the game has been reset
+        self.flipped = False # Used to keep track if the second dealer card has been shown
+        self.secondDealerCard = None # Used to hold the second dealer card which is not shown at the start of the game
+        self.start = True # Used to keep track if the cards being given are part of the initial 4
+        self.dealerTurn = False # Used to keep track if it is the dealers turn
+        self.seenCards = set() # Used to keep track of what cards have been seen 
+        self.seenCards.add(1000)
 
         self.initializeScreen() # Call initialize screen to display the user interface
     
@@ -124,7 +126,6 @@ class BlackJack:
             case 'money':
                 self.playerMoneyText.update(f'Money: ${self.playerMoney}', 15) # Call the update function to update the playerMoneyText
 
-
     def toggleHelp(self): # Used to /toggle the help screen
         self.open = not self.open # Change the self.open variable to its opposite (True to False, False to True)
         if self.open: # If open is true
@@ -141,7 +142,6 @@ class BlackJack:
             rectangle = game.Rect(0,100, self.screenWidth, self.screenHeight - 300) # Create a rectangle to cover the help screen
             game.draw.rect(self.screen, (78, 106, 84), rectangle) # Draw the rectangle on the screen
             self.replaceItemsOnScreen() # Call replaceItemsOnScreen 
-
 
     def replaceItemsOnScreen(self): # Used to replace the items that were on the screen before the help button was pressed
         if self.bettingActive: # Check if betting is active
@@ -220,46 +220,46 @@ class BlackJack:
 
     def initializeCardDeck(self): # Used to intialize the deck of cards
         index = -1 # Initialize index to place into the hashmap
-        
-        for filename in os.listdir('./BlackJackAssets'): # Loop through each file in the BlackJackAssets folder
-            index += 1 # Increase the index by 11
-            cardPath = f'./BlackJackAssets/{filename}' # Get the card path 
-            card = game.image.load(cardPath) # Load the card
-            match filename[0]: # Check the first letter in the filename in O(1) time
-                case 'A': # Check if first letter is A, if so then the card is an Ace
-                    val = [11,1] # Give the val variable its two values (1 or 11)
-                case '2': # Check if the first letter is 2
-                    val = [2] # Give the val variable the value of 2
-                case '3': # Check if the first letter is 3
-                    val = [3] # Give the val variable the value of 3
-                case '4': # Check if the first letter is 4
-                    val = [4] # Give the val variable the value of 4
-                case '5': # Check if the first letter is 5
-                    val = [5] # Give the val variable the value of 5
-                case '6': # Check if the first letter is 6
-                    val = [6] # Give the val variable the value of 6
-                case '7': # Check if the first letter is 7
-                    val = [7] # Give the val variable the value of 7
-                case '8': # Check if the first letter is 8
-                    val = [8] # Give the val variable the value of 8
-                case '9': # Check if the first letter is 9
-                    val = [9] # Give the val variable the value of 9
-                case '1': # Check if the first letter is 1
-                    val = [10] # Give the val variable the value of 10
-                case 'j': # Check if the first letter is j
-                    val = [10] # Give the val variable the value of 10
-                case 'k': # Check if the first letter is k
-                    val = [10] # Give the val variable the value of 10
-                case 'q': # Check if the first letter is q
-                    val = [10] # Give the val variable the value of 10
-                case _: # Default case
-                    index -= 1 # Reduce the index by 1 as there is nothing being added to the deck dictionary
-                    val = [] # Set the value to an empty list
-                
-            if len(val) > 0: # Check if the length of the value array is greater than 0
-                card = game.transform.scale(card,(170,220)) # scale the card to specified width and height
-                self.deck[index] = (card,val) # Add the card value pair to the deck
-        print(len(self.deck))
+        for _ in range(5):
+            for filename in os.listdir('./BlackJackAssets'): # Loop through each file in the BlackJackAssets folder
+                index += 1 # Increase the index by 11
+                cardPath = f'./BlackJackAssets/{filename}' # Get the card path 
+                card = game.image.load(cardPath) # Load the card
+                match filename[0]: # Check the first letter in the filename in O(1) time
+                    case 'A': # Check if first letter is A, if so then the card is an Ace
+                        val = [11,1] # Give the val variable its two values (1 or 11)
+                    case '2': # Check if the first letter is 2
+                        val = [2] # Give the val variable the value of 2
+                    case '3': # Check if the first letter is 3
+                        val = [3] # Give the val variable the value of 3
+                    case '4': # Check if the first letter is 4
+                        val = [4] # Give the val variable the value of 4
+                    case '5': # Check if the first letter is 5
+                        val = [5] # Give the val variable the value of 5
+                    case '6': # Check if the first letter is 6
+                        val = [6] # Give the val variable the value of 6
+                    case '7': # Check if the first letter is 7
+                        val = [7] # Give the val variable the value of 7
+                    case '8': # Check if the first letter is 8
+                        val = [8] # Give the val variable the value of 8
+                    case '9': # Check if the first letter is 9
+                        val = [9] # Give the val variable the value of 9
+                    case '1': # Check if the first letter is 1
+                        val = [10] # Give the val variable the value of 10
+                    case 'j': # Check if the first letter is j
+                        val = [10] # Give the val variable the value of 10
+                    case 'k': # Check if the first letter is k
+                        val = [10] # Give the val variable the value of 10
+                    case 'q': # Check if the first letter is q
+                        val = [10] # Give the val variable the value of 10
+                    case _: # Default case
+                        index -= 1 # Reduce the index by 1 as there is nothing being added to the deck dictionary
+                        val = [] # Set the value to an empty list
+                    
+                if len(val) > 0: # Check if the length of the value array is greater than 0
+                    card = game.transform.scale(card,(170,220)) # scale the card to specified width and height
+                    self.deck[index] = (card,val) # Add the card value pair to the deck
+            print(len(self.deck))
 
     def placeSingleBet(self): # Used to increase the current bet by $1
         if self.bettingActive and self.playerMoney - 1 >= 0: # Check if betting is True and the player has money
@@ -320,7 +320,6 @@ class BlackJack:
             self.currentBet -= removed # Remove the bet amount from the currentBet
             self.updateInformation('money-bet') # Call updateInformation to display the new bet and player money amounts on screen
 
-    
     def confirmBet(self): # Used to confirm the bet
         if self.currentBet > 0: # Check to make sure the current bet is greater than -
             self.bettingActive = False # Turn betting off
@@ -345,7 +344,10 @@ class BlackJack:
         return amount # Return the amount of that particular chip
 
     def chooseCard(self): # Used to choose a random card
-        index = random.randint(0, len(self.deck) - 1) # Use random.randint to get a random integer from 0 to the length of the deck (inclusive)
+        index = 1000 # Initialize index as 1000 (this number is specifically added to the set as it is not a valid index)
+        while index in self.seenCards: # Get a random index until it has not been seen in the seenCards set
+            index = random.randint(0, len(self.deck) - 1) # Use random.randint to get a random integer from 0 to the length of the deck (inclusive)
+        self.seenCards.add(index) # Add the index to the set
         card = self.deck[index] # Get the card at the specified key
         return card # Return the card
 
@@ -500,17 +502,13 @@ class BlackJack:
         self.winner = None # Set winner to None
         self.flipped = False # Set flipped to false
         self.dealerTurn = False # Set dealerTurn to false
+        self.determineDeckShuffle() # Call determineDeckShuffle to see if the seenCards set needs to be reset
         print(f'Player score is now {self.playerScore}')
         print(f'Dealer score is now {self.dealerScore}')
         print('______________________________________________________')
 
-    
-    # def reDrawButtons(self):
-    #     self.standButton = Button(self.screen, (90,90,90), 100, 150, self.screenWidth // 2 + 50, self.screenHeight - 190) # Create a button to stand
-    #     self.standButton.write('Stand', 35, (255,255,255)) # Call write to write text on the button
-
-    #     self.hitButton = Button(self.screen, (90,90,90), 100, 150, self.screenWidth // 2 - 200, self.screenHeight - 190) # Create a button to hit
-    #     self.hitButton.write('Hit', 35, (255,255,255)) # Call write to write text on the button
-
-    #     self.helpButton = Button(self.screen, (78, 106, 84), 60, 50, 0, 0) # Create a button to act as the help button
-    #     self.helpButton.write('?', 40, (255,255,255)) # Call write to write text on the button
+    def determineDeckShuffle(self): # Used to determine when to reset the seenCards set
+        print(f'Current set length {len(self.seenCards)}')
+        if len(self.seenCards) >= len(self.deck) // 2: # Check if the length of the seenCards set is greater than or half the length of the deck
+            self.seenCards.clear() # call the clear function to empty the set
+            self.seenCards.add(1000) # Add 1000 to the set
