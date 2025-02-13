@@ -8,7 +8,7 @@ from BlackJackLogic import BlackJack
 #____________________ Initialize The Screen _________________________________________
 game.init() # Initialize the pygame module 
 
-game.display.set_caption('Diamond Dealers Casion') # Create the title of the terminal
+game.display.set_caption('Diamond Dealers Casino') # Create the title of the terminal
 
 game.display.set_icon(game.image.load('./Logo.png')) # Create the logo for the terminal
 
