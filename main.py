@@ -19,7 +19,6 @@ systemHeight = systemInformation.current_h # Create a variable with the system h
 screen = game.display.set_mode((systemWidth - 100,systemHeight - 100))  # Create the screen (width (X), height (Y))
 
 blackJack = BlackJack(screen, systemHeight - 100, systemWidth - 100, 200)
-
 #_____________________ Run the game _________________________________________________
 gameRunning = True # Initialize a variable indicating if the game is currently running
 while gameRunning:
@@ -28,6 +27,25 @@ while gameRunning:
         if event.type == game.QUIT: # Check if the event is quit (clicking the red exit button)
             gameRunning = False # Turn the game off
     
+    if blackJack.animatePlayerCard:
+        # print(f'XIncrease base {(systemWidth // 2 - 103 + (50 * len(blackJack.playerCardList))) - 200}')
+        # print(f'X starting point {blackJack.xStartingPoint}')
+        # print(f'Y starting point {((systemHeight - 600) - 197)}')
+        XIncrease = (blackJack.xStartingPoint - 200) / 30
+        YIncrease = ((systemHeight - 600) - 197) / 30
+        # print(XIncrease, YIncrease)
+        # print(f'XIncrease {XIncrease}')
+        # print(f'YIncrease {YIncrease}')
+        blackJack.animationX += XIncrease
+        blackJack.animationY += YIncrease
+        blackJack.animateCard(blackJack.cardBeingAnimated, blackJack.animationX, blackJack.animationY, True)
+    elif blackJack.animateDealerCard:
+        XIncrease = (blackJack.xStartingPoint - 200) / 30
+        YIncrease = (100 - 190) / 30
+        blackJack.animationX += XIncrease
+        blackJack.animationY += YIncrease
+        blackJack.animateCard(blackJack.cardBeingAnimated, blackJack.animationX, blackJack.animationY, False)
+
     blackJack.chip1Button.action(lambda: blackJack.placeSingleBet())
     blackJack.chip5Button.action(lambda: blackJack.placeFiveBet())
     blackJack.chip10Button.action(lambda: blackJack.placeTenBet())
