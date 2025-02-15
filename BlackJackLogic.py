@@ -289,8 +289,6 @@ class BlackJack:
                     elif self.playerTurn == False:
                         self.stay()
                 
-
-
     # __________________ Functions For Game Logic ____________________________________________
 
     def initializeCardDeck(self): # Used to intialize the deck of cards
@@ -528,10 +526,6 @@ class BlackJack:
             self.addCard(False)
         else:
             self.checkWinner()
-        # while self.dealerScore < 17 and self.bettingActive == False: # Have the dealer pick cards until the dealerscore is greater than 16
-        #     self.addCard(False) # Call addCard with the parameter as false so the card is added to the dealer
-        # if self.winner == None: # Check if there has not been a winner
-        #     self.checkWinner() # Call checkWinner to determine who won the game
     
     def checkWinner(self): # Used to check who won the game
         
