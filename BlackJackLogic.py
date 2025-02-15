@@ -95,7 +95,7 @@ class BlackJack:
     def placeChips(self, numberOfTwentyFiveChips, numberOfTenChips, numberOfFiveChips, numberOfOneChips): # Used to place the chips on the screen
         xPosition = self.screenWidth // 2 - 100 # Initialize the starting X position of the chips
         yPosition = self.screenHeight - 300 # Initialize the starting Y position of the chips
-        rectangle = game.Rect(0,100, self.screenWidth, self.screenHeight - 300) # Create a rectangle to go over the buttons for confirming and placing the bet, and the starting text
+        rectangle = game.Rect(0,80, self.screenWidth, self.screenHeight - 300) # Create a rectangle to go over the buttons for confirming and placing the bet, and the starting text
         game.draw.rect(self.screen, (78, 106, 84), rectangle) # Draw the rectangle to the screen
         for _ in range(numberOfTwentyFiveChips): # Loop through the number of 25 chips
             xPosition += 15 # Increase the xPosition variable by 15
@@ -192,6 +192,7 @@ class BlackJack:
 
     def flip(self): # Used to flip the card facing the wrong direction once the dealers turn occurs
         if self.secondDealerCard and len(self.dealerCardList) > 1:
+            self.replaceItemsOnScreen()
             print(f'Inside flip, the length of the cards list is {len(self.dealerCardList)}')
             xPosition = self.screenWidth // 2 - 103 + 50  # Initialize the X position of the flipped card
             yPosition = 100 # Initialize the y position of the  flipped card
@@ -240,7 +241,7 @@ class BlackJack:
         else:
             self.placeCard(card,x,y)
         if player:
-            if x >= self.screenWidth // 2 - 103 + (50 * len(self.playerCardList)) and y >= self.screenHeight - 500:
+            if x >= self.screenWidth // 2 - 103 + (50 * len(self.playerCardList)) or y >= self.screenHeight - 530:
                 self.replaceItemsOnScreen()
                 self.animationDone = True
                 self.animatePlayerCard = False
@@ -269,6 +270,8 @@ class BlackJack:
                     self.animationY = 200
                     self.dealerCardList.append(card) # Append the card to the dealerCardList
                     self.start = False
+                    self.checkGame(self.playerScore)
+                    self.checkGame(self.dealerScore)
                 else:
                     self.replaceItemsOnScreen()
                     self.animationDone = True
