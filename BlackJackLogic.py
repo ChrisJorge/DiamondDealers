@@ -193,7 +193,7 @@ class BlackJack:
     def flip(self): # Used to flip the card facing the wrong direction once the dealers turn occurs
         if self.secondDealerCard and len(self.dealerCardList) > 1:
             print(f'Inside flip, the length of the cards list is {len(self.dealerCardList)}')
-            xPosition = self.screenWidth // 2 - 100 + 50  # Initialize the X position of the flipped card
+            xPosition = self.screenWidth // 2 - 103 + 50  # Initialize the X position of the flipped card
             yPosition = 100 # Initialize the y position of the  flipped card
             self.flipped = True # Set self.flipped to true, signaling the card has already been flipped
             self.dealerCardList[1] = self.secondDealerCard[0] # Change the card in the array from the back svg to the actual card svg
@@ -258,7 +258,7 @@ class BlackJack:
         else:
             # print(x,y)
             # print(y < 100)
-            if x >= self.screenWidth // 2 - 103 + (50 * len(self.dealerCardList)) and y <= 110:
+            if x >= self.screenWidth // 2 - 103 + (50 * len(self.dealerCardList)) and y <= 115:
                 # print('Inside dealer')
                 if self.secondDealerCardAnimation == True:
                     self.dealerScore = self.increaseScore(self.secondDealerCard[1], self.dealerScore, False) # call increaseScore to increase the dealers score 

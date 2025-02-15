@@ -41,7 +41,7 @@ while gameRunning:
         blackJack.animateCard(blackJack.cardBeingAnimated, blackJack.animationX, blackJack.animationY, True)
     elif blackJack.animateDealerCard:
         XIncrease = (blackJack.xStartingPoint - 200) / 30
-        YIncrease = (100 - 190) / 30
+        YIncrease = (100 - 180) / 30
         blackJack.animationX += XIncrease
         blackJack.animationY += YIncrease
         blackJack.animateCard(blackJack.cardBeingAnimated, blackJack.animationX, blackJack.animationY, False)
