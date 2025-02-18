@@ -396,7 +396,6 @@ class BlackJack:
     def confirmBet(self): # Used to confirm the bet
         if self.currentBet > 0: # Check to make sure the current bet is greater than -
             self.bettingActive = False # Turn betting off
-            self.playerTurn = True # Change player turn to true
             self.numberOfTwentyFiveChips = self.getChipAmount(25, self.currentBet) # Get the number of 25 chips by calling getChipAmount
             self.numberOfTenChips = self.getChipAmount(10, self.currentBet - (self.numberOfTwentyFiveChips * 25)) # Get the number of Ten Chips by calling getChipAmount
             self.numberOfFiveChips = self.getChipAmount(5, self.currentBet - (self.numberOfTwentyFiveChips * 25 + self.numberOfTenChips * 10)) # Get the number of Five Chips by calling getChipAmount
@@ -493,6 +492,7 @@ class BlackJack:
                         self.addCard(True)
                     case 3:
                         self.addDealerSecondCard()
+                        self.playerTurn = True # Change player turn to true
         else:
             self.checkGame(self.playerScore, True) # Call checkGame with the players score to check for blackjack
             self.checkGame(self.dealerScore, False) # Call checkGame with the dealers score to check for blackjack
@@ -515,7 +515,8 @@ class BlackJack:
         # self.placeCard(cardBack, xPosition, yPosition) # call placeCard to place the card on the screen
     
     def handleStayButton(self): # Used to handle the logic for when the player clicks stay
-        print(f'Insinde handStayButton the length of dealer list is{len(self.dealerCardList)}')
+        print(f'Insinde handSletayButton the length of dealer list is{len(self.dealerCardList)}')
+        print(self.playerTurn)
         if self.bettingActive == False and self.playerTurn == True: # Check if betting is False and if it is the players turn
             self.playerTurn = False # Change playerTurn to false, used
             self.flip() # Call self.flip to show the card that is hidden
@@ -528,7 +529,7 @@ class BlackJack:
             self.checkWinner()
     
     def checkWinner(self): # Used to check who won the game
-        
+        self.playerTurn = False
         if self.reset == False: # Check if the game has already been reset
             if self.flipped == False: # Check if the card has been flipped
                 self.flip() # Call flip to show the hidden card
