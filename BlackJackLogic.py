@@ -478,7 +478,7 @@ class BlackJack:
                 self.handleStayButton() # Call handleStayButton
 
     def handleHitButton(self): # Used to handle the logic when the player hits the bet button
-        if self.bettingActive == False and self.playerScore < 21 and self.playerTurn: # Check if betting is off and if it is the players turn
+        if self.bettingActive == False and self.playerScore < 21 and self.playerTurn and self.animationDone == True: # Check if betting is off and if it is the players turn
             self.addCard(True) # Call addCard to add a card
     
     def startGame(self, test): # Used to start the game
@@ -517,7 +517,7 @@ class BlackJack:
     def handleStayButton(self): # Used to handle the logic for when the player clicks stay
         print(f'Insinde handSletayButton the length of dealer list is{len(self.dealerCardList)}')
         print(self.playerTurn)
-        if self.bettingActive == False and self.playerTurn == True: # Check if betting is False and if it is the players turn
+        if self.bettingActive == False and self.playerTurn == True and self.animationDone == True: # Check if betting is False and if it is the players turn
             self.playerTurn = False # Change playerTurn to false, used
             self.flip() # Call self.flip to show the card that is hidden
             self.stay() # call stay to trigger the logic for the dealer to begin choosing cards
