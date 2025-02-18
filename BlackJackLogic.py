@@ -289,8 +289,6 @@ class BlackJack:
                     elif self.playerTurn == False:
                         self.stay()
                 
-
-
     # __________________ Functions For Game Logic ____________________________________________
 
     def initializeCardDeck(self): # Used to intialize the deck of cards
@@ -398,7 +396,6 @@ class BlackJack:
     def confirmBet(self): # Used to confirm the bet
         if self.currentBet > 0: # Check to make sure the current bet is greater than -
             self.bettingActive = False # Turn betting off
-            self.playerTurn = True # Change player turn to true
             self.numberOfTwentyFiveChips = self.getChipAmount(25, self.currentBet) # Get the number of 25 chips by calling getChipAmount
             self.numberOfTenChips = self.getChipAmount(10, self.currentBet - (self.numberOfTwentyFiveChips * 25)) # Get the number of Ten Chips by calling getChipAmount
             self.numberOfFiveChips = self.getChipAmount(5, self.currentBet - (self.numberOfTwentyFiveChips * 25 + self.numberOfTenChips * 10)) # Get the number of Five Chips by calling getChipAmount
@@ -481,7 +478,7 @@ class BlackJack:
                 self.handleStayButton() # Call handleStayButton
 
     def handleHitButton(self): # Used to handle the logic when the player hits the bet button
-        if self.bettingActive == False and self.playerScore < 21 and self.playerTurn: # Check if betting is off and if it is the players turn
+        if self.bettingActive == False and self.playerScore < 21 and self.playerTurn and self.animationDone == True: # Check if betting is off and if it is the players turn
             self.addCard(True) # Call addCard to add a card
     
     def startGame(self, test): # Used to start the game
@@ -495,6 +492,7 @@ class BlackJack:
                         self.addCard(True)
                     case 3:
                         self.addDealerSecondCard()
+                        self.playerTurn = True # Change player turn to true
         else:
             self.checkGame(self.playerScore, True) # Call checkGame with the players score to check for blackjack
             self.checkGame(self.dealerScore, False) # Call checkGame with the dealers score to check for blackjack
@@ -517,8 +515,9 @@ class BlackJack:
         # self.placeCard(cardBack, xPosition, yPosition) # call placeCard to place the card on the screen
     
     def handleStayButton(self): # Used to handle the logic for when the player clicks stay
-        print(f'Insinde handStayButton the length of dealer list is{len(self.dealerCardList)}')
-        if self.bettingActive == False and self.playerTurn == True: # Check if betting is False and if it is the players turn
+        print(f'Insinde handSletayButton the length of dealer list is{len(self.dealerCardList)}')
+        print(self.playerTurn)
+        if self.bettingActive == False and self.playerTurn == True and self.animationDone == True: # Check if betting is False and if it is the players turn
             self.playerTurn = False # Change playerTurn to false, used
             self.flip() # Call self.flip to show the card that is hidden
             self.stay() # call stay to trigger the logic for the dealer to begin choosing cards
@@ -528,13 +527,9 @@ class BlackJack:
             self.addCard(False)
         else:
             self.checkWinner()
-        # while self.dealerScore < 17 and self.bettingActive == False: # Have the dealer pick cards until the dealerscore is greater than 16
-        #     self.addCard(False) # Call addCard with the parameter as false so the card is added to the dealer
-        # if self.winner == None: # Check if there has not been a winner
-        #     self.checkWinner() # Call checkWinner to determine who won the game
     
     def checkWinner(self): # Used to check who won the game
-        
+        self.playerTurn = False
         if self.reset == False: # Check if the game has already been reset
             if self.flipped == False: # Check if the card has been flipped
                 self.flip() # Call flip to show the hidden card
