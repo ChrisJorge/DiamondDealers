@@ -28,14 +28,8 @@ while gameRunning:
             gameRunning = False # Turn the game off
     
     if blackJack.animatePlayerCard:
-        # print(f'XIncrease base {(systemWidth // 2 - 103 + (50 * len(blackJack.playerCardList))) - 200}')
-        # print(f'X starting point {blackJack.xStartingPoint}')
-        # print(f'Y starting point {((systemHeight - 600) - 197)}')
         XIncrease = (blackJack.xStartingPoint - 200) / 30
         YIncrease = ((systemHeight - 600) - 197) / 30
-        # print(XIncrease, YIncrease)
-        # print(f'XIncrease {XIncrease}')
-        # print(f'YIncrease {YIncrease}')
         blackJack.animationX += XIncrease
         blackJack.animationY += YIncrease
         blackJack.animateCard(blackJack.cardBeingAnimated, blackJack.animationX, blackJack.animationY, True)

@@ -31,16 +31,14 @@ class BlackJack:
         self.seenCards = set() # Used to keep track of what cards have been seen 
         self.seenCards.add(1000)
         self.animationDone = True # Used to keep track if the card animation has finished
-        self.animatePlayerCard = False # Used to keep track of which card needs to be animated
-        self.animationX = 200
-        self.animationY = 200
-        self.cardBeingAnimated = None
-        self.xStartingPoint = self.screenWidth // 2 - 103
-        self.animateDealerCard = False
-        self.secondDealerCardAnimation = False
-        self.test = 0
-        print(f'Width: {self.screenWidth // 2 - 103}')
-        print(f'Height: {self.screenHeight - 500}')
+        self.animatePlayerCard = False # Used to keep track if card is being animated for the player or the dealer
+        self.animationX = 200 # Used to keep track of the x coordiante for the animations
+        self.animationY = 200 # Used to keep track of the y coordinate for the animations
+        self.cardBeingAnimated = None # Used to keep track of which card is being animated
+        self.xStartingPoint = self.screenWidth // 2 - 103 # Used by main.py to determine the speed of the animation
+        self.animateDealerCard = False # Used to determine if card is animated to dealer or player
+        self.secondDealerCardAnimation = False # Used to keep track if the dealers second card, the one you cannot see, has been animated
+        self.startingTurn = 0 # Used to keep track of the starting turn, used for the 4 initial moves each game
         self.initializeScreen() # Call initialize screen to display the user interface
     
     # __________________ Functions To Display Information And Visuals On Screen ____________
@@ -89,7 +87,7 @@ class BlackJack:
         self.removeBetButton = Button(self.screen, (90,90,90), 100, 150, self.screenWidth // 2 + 50, self.screenHeight - 350) # Create a button to act as the remove bet button
         self.removeBetButton.write('Remove', 35, (255,255,255)) # Call write to write text on the button
 
-        self.placeDeckImage()
+        self.placeDeckImage() # Call placeDecckImage to place the image of the deck
         self.initializeCardDeck() # Call initializeCardDeck to initialize the deck of cards used in the game
     
     def placeChips(self, numberOfTwentyFiveChips, numberOfTenChips, numberOfFiveChips, numberOfOneChips): # Used to place the chips on the screen
@@ -112,7 +110,7 @@ class BlackJack:
 
     def updateInformation(self, information): # Used to update the information on the screen
         match(information): # Get the type of information to know what to update
-            case 'money+bet': # If the case is 'money+bet'
+            case 'money+bet': 
                 self.playerMoneyText.update(f'Money: ${self.playerMoney}') # Call the update function to update the playerMoneyText
                 self.startText.update(f'Current Bet: ${self.currentBet}', 90) # Call the update function to update the startText
                 self.playerBetText.update(f'Player Bet: ${self.currentBet}', 15) # Call the update function to update the playerBetText
@@ -123,7 +121,7 @@ class BlackJack:
                      self.startText.update(f'Current Bet: ${self.currentBet}', 90) # Call the update function to update the startText
                 else:
                      self.startText.update(f'Place A Bet To Begin', 90) # Call the update function to update the startText
-            case 'player':
+            case 'player': 
                 print('updating player score')
                 self.playerScoreText.update(f'Player Score: {self.playerScore}', 25) # Call the update function to update the playerScoreText
             case 'dealer':
@@ -136,7 +134,7 @@ class BlackJack:
             case 'money':
                 self.playerMoneyText.update(f'Money: ${self.playerMoney}', 15) # Call the update function to update the playerMoneyText
 
-    def toggleHelp(self): # Used to /toggle the help screen
+    def toggleHelp(self): # Used to toggle the help screen
         self.open = not self.open # Change the self.open variable to its opposite (True to False, False to True)
         if self.open: # If open is true
             self.helpRectangle = game.Rect(self.screenWidth // 4, 0 + self.screenHeight // 5, self.screenWidth // 2, self.screenHeight // 2) # Create the rectangle for the help screen
@@ -185,7 +183,7 @@ class BlackJack:
             if self.winner: # Check if htere is a winner
                 self.displayWinner() # Display the winner
 
-        self.placeDeckImage()
+        self.placeDeckImage() # Call placeDeckImage to replace the image of the deck
 
     def placeCard(self, card, xPosition, yPosition): # Function used to place a card on the screen
         self.screen.blit(card,(xPosition, yPosition)) # Place the card on the screen
@@ -217,77 +215,73 @@ class BlackJack:
             case 'DBJ':
                 self.startText.update('Dealer Won (BlackJack), place another bet to restart', 30, 300) # Call update on startText to inform the player that the dealer has won with blackjack
             case '_':
-                self.startText.update('Error please send log to developer', 30, 300) # Used for internal testing, will be removed later
+                self.startText.update('Error please send log to developer', 30, 300) # Used for internal testing
         
         print(self.winner)
         if self.winner: # Check if the winner is not None
             self.resetGameLogic() # Reset the game logic 
     
-    def resetScreen(self):
+    def resetScreen(self): # Used to reset the screen
         rectangle = game.Rect(0,100, self.screenWidth, self.screenHeight - 300) # Create a rectangle to go over the buttons for confirming and placing the bet, and the starting text
         game.draw.rect(self.screen, (78, 106, 84), rectangle) # Draw the rectangle to the screen
 
         self.replaceItemsOnScreen() # call replaceItemsOnScreen to redraw the game onto the screen
     
-    def placeDeckImage(self):
-        cardDeck = game.image.load('./BlackJackAssets/deck.svg')
-        self.screen.blit(cardDeck, (200, 200))
+    def placeDeckImage(self): # Used to place the image of the deck
+        cardDeck = game.image.load('./BlackJackAssets/deck.svg') # Loads the image
+        self.screen.blit(cardDeck, (200, 200)) # Places the image on the screen
 
-    def animateCard(self, card, x, y, player):
-        # print(card, player)
-        self.replaceItemsOnScreen()
-        if self.secondDealerCardAnimation == False:
-            self.placeCard(card[0], x, y)
+    def animateCard(self, card, x, y, player): # Used to animate the card
+        self.replaceItemsOnScreen() # Call replaceItemsOnScreen to re draw everything to the screen, prevents screen tearing from the animation
+        if self.secondDealerCardAnimation == False: # Check if the card being animated is the second dealer card
+            self.placeCard(card[0], x, y) # Call place card and place the second dealer card
         else:
-            self.placeCard(card,x,y)
-        if player:
-            if x >= self.screenWidth // 2 - 103 + (50 * len(self.playerCardList)) or y >= self.screenHeight - 530:
-                self.replaceItemsOnScreen()
-                self.animationDone = True
-                self.animatePlayerCard = False
-                self.placeCard(card[0], self.screenWidth // 2 - 103 + (50 * len(self.playerCardList)), self.screenHeight - 500)
-                self.animationX = 200
-                self.animationY = 200
+            self.placeCard(card,x,y) # Call place card and place the ard
+        if player: # Check if the card is for the player
+            if x >= self.screenWidth // 2 - 103 + (50 * len(self.playerCardList)) or y >= self.screenHeight - 530: # Check if the x and y coordinates are below a certain criteria
+                self.replaceItemsOnScreen() # Call replaceItemsOnScreen to re draw everything to the screen, prevents screen tearing from the animation
+                self.animationDone = True # Set the animationDone variable to true, indicating the animation has ended
+                self.animatePlayerCard = False # Set animatePlayerCard to false
+                self.placeCard(card[0], self.screenWidth // 2 - 103 + (50 * len(self.playerCardList)), self.screenHeight - 500) # Place the card one last time in the correct location
+                self.animationX = 200 # Reset the animationX to the starting position
+                self.animationY = 200 # Reset the animationY to the starting position
                 self.playerCardList.append(card[0]) # Append the card to the playerCardList
                 self.playerScore = self.increaseScore(card[1], self.playerScore, True) # Call increaseScore to increase the score
                 self.playerScore, self.playerAceCount = self.checkScore(self.playerScore, self.playerAceCount, True) # Call checkScore to check if there are any ace values that need to be changed from 11 to 1
                 self.updateInformation('player') # Call updateInformation with the parameter player to update the players score
                 self.checkGame(self.playerScore, True) # Call checkGame to check the current score
-                if self.start:
-                    self.test += 1
-                    self.startGame(self.test)
+                if self.start: # Check if it is the start of the game
+                    self.startingTurn += 1 # Increase starting turn by 1
+                    self.startGame(self.startingTurn) # Call startGame with the updating startingTurn to do the next starting move
         else:
-            # print(x,y)
-            # print(y < 100)
-            if x >= self.screenWidth // 2 - 103 + (50 * len(self.dealerCardList)) and y <= 115:
-                # print('Inside dealer')
-                if self.secondDealerCardAnimation == True:
+            if x >= self.screenWidth // 2 - 103 + (50 * len(self.dealerCardList)) and y <= 115: # Check if the x and y coordinated are within a certain criteria
+                if self.secondDealerCardAnimation == True: # Check if the animation is for the secondDealerCard
                     self.dealerScore = self.increaseScore(self.secondDealerCard[1], self.dealerScore, False) # call increaseScore to increase the dealers score 
-                    self.secondDealerCardAnimation = False
-                    self.animateDealerCard = False
-                    self.animationDone = True
-                    self.animationX = 200
-                    self.animationY = 200
+                    self.secondDealerCardAnimation = False # Set secondDealerCardAnimation to False to indicate the animation has ended
+                    self.animateDealerCard = False # Set animateDealerCard to False to inidcate the dealercard is no longer being animated
+                    self.animationDone = True # Set animationDone to true, indicating the animation has ended
+                    self.animationX = 200 # Reset the animationX to the starting position
+                    self.animationY = 200 # Reset the animationY to the starting position
                     self.dealerCardList.append(card) # Append the card to the dealerCardList
-                    self.start = False
-                    self.checkGame(self.playerScore)
-                    self.checkGame(self.dealerScore)
+                    self.start = False # Change self.start to False, the 4 starting moves have finished
+                    self.checkGame(self.playerScore) # Call checkGame with the playerScore to see if player has blackjack
+                    self.checkGame(self.dealerScore) # Call checkGame with the dealerScore to see if the dealer has blackjack
                 else:
-                    self.replaceItemsOnScreen()
-                    self.animationDone = True
-                    self.animateDealerCard = False
-                    self.placeCard(card[0], self.screenWidth // 2 - 103 + (50 * len(self.dealerCardList)), 100)
-                    self.animationX = 200
-                    self.animationY = 200
+                    self.replaceItemsOnScreen() # Call replaceItemsOnScreen to re draw everything to the screen, prevents screen tearing from the animation
+                    self.animationDone = True # Set animationDone to True, indicating the animation has ended
+                    self.animateDealerCard = False # Set animateDealerCard to False, Indicating the dealerCard is no longer being animated
+                    self.placeCard(card[0], self.screenWidth // 2 - 103 + (50 * len(self.dealerCardList)), 100) # Call place card to place the card in its final position
+                    self.animationX = 200 # Reset the animationX to the starting position
+                    self.animationY = 200 # Reset the animationY to the starting position
                     self.dealerCardList.append(card[0]) # Append the card to the dealerCardList
                     self.dealerScore = self.increaseScore(card[1], self.dealerScore, False) # Call increaseScore to increase the score
                     self.dealerScore, self.dealerAceCount = self.checkScore(self.dealerScore, self.dealerAceCount, False) # Call checkScore to check if there are any ace values that need to be changed from 11 to 1
                     self.updateInformation('dealer') # Call updateInformation with the parameter dealer to update the dealers score
-                    if self.start:
-                        self.test += 1
-                        self.startGame(self.test)
-                    elif self.playerTurn == False:
-                        self.stay()
+                    if self.start: # Check if self.start is True
+                        self.startingTurn += 1 # increase startingTurn by 1
+                        self.startGame(self.startingTurn) # Call startGame with the updating startingTurn to do the next starting move
+                    elif self.playerTurn == False: # Check if the playerTurn is False
+                        self.stay() # Call stay to give the dealer the next card
                 
     # __________________ Functions For Game Logic ____________________________________________
 
@@ -402,7 +396,7 @@ class BlackJack:
             self.numberOfOneChips = self.getChipAmount(1, self.currentBet - (self.numberOfTwentyFiveChips * 25 + self.numberOfTenChips * 10 + self.numberOfFiveChips * 5)) # Get the number of 1 chips by calling getChipAmount
             self.placeChips(self.numberOfTwentyFiveChips, self.numberOfTenChips, self.numberOfFiveChips, self.numberOfOneChips) # Send the values to the placeChips function
             self.start = True
-            self.startGame(self.test) # Call start game to start the game and give the initial set of cards
+            self.startGame(self.startingTurn) # Call start game to start the game and give the initial set of cards
             # print('25', self.numberOfTwentyFiveChips)
             # print('10', self.numberOfTenChips)
             # print('5', self.numberOfFiveChips)
@@ -430,15 +424,15 @@ class BlackJack:
         if player: # Check if the card is for the player
             print(f'Player score before adding card {self.playerScore}')
             print(f'Adding card with value {card[1]} to player')
-            self.cardBeingAnimated = card
-            self.animationDone = False
-            self.animatePlayerCard = True
+            self.cardBeingAnimated = card # Set cardBeingAnimated to the card given
+            self.animationDone = False # Set animationDone to False, used so the player cannot activate the hit and hold functionality while the card is being given
+            self.animatePlayerCard = True # Set animatePlayerCard to True, used to determine where to send the card
         else:
             print(f'Dealer score before adding card {self.dealerScore}')
             print(f'Adding card with value {card[1]} to Dealer')
-            self.cardBeingAnimated = card
-            self.animationDone = False
-            self.animateDealerCard = True
+            self.cardBeingAnimated = card # Set cardBeingAnimated to the card given
+            self.animationDone = False # Set animationDone to False, used so the player cannot activate the hit and hold functionality while the card is being given
+            self.animateDealerCard = True # Set animateDealerCard to True, used to determine where to send the card
             
     def increaseScore(self,value, currentScore, player): # Used to increase the player of dealers score based on the cards score
         print(f'Inside increase score, the value being added is {value}')
@@ -481,17 +475,17 @@ class BlackJack:
         if self.bettingActive == False and self.playerScore < 21 and self.playerTurn and self.animationDone == True: # Check if betting is off and if it is the players turn
             self.addCard(True) # Call addCard to add a card
     
-    def startGame(self, test): # Used to start the game
-        if self.start:
-            match test:
+    def startGame(self, turn): # Used to start the game
+        if self.start: # Check if self.start is true
+            match turn: # Check which turn it is
                     case 0:
-                        self.addCard(True)
+                        self.addCard(True) # Call addCard with the parameter True to give the player a card
                     case 1:
-                        self.addCard(False)
+                        self.addCard(False) # Call addCard with the parameter False to give the dealer a card
                     case 2:
-                        self.addCard(True)
+                        self.addCard(True) # Call addCard with the parameter True to give the player a card
                     case 3:
-                        self.addDealerSecondCard()
+                        self.addDealerSecondCard() # Call addDealerSecondCard to add the second card to the dealer
                         self.playerTurn = True # Change player turn to true
         else:
             self.checkGame(self.playerScore, True) # Call checkGame with the players score to check for blackjack
@@ -503,16 +497,10 @@ class BlackJack:
         self.secondDealerCard = card # Set secondDealerCard to the chosen card
         cardBack = game.image.load('./BlackJackAssets/back.svg') # Load the cardBack svg image
         cardBack = game.transform.scale(cardBack, (170,220)) # Scale the cardBack svg image to the correct size
-        self.cardBeingAnimated = cardBack
-        self.animationDone = False
-        self.animateDealerCard = True
-        self.secondDealerCardAnimation = True
-
-        # self.dealerScore = self.increaseScore(card[1], self.dealerScore, False) # call increaseScore to increase the dealers score 
-        # self.dealerCardList.append(cardBack) # Append the cardBack to the dealerCardList (necessary for putting all items back on the screen)
-        # xPosition = self.screenWidth // 2 - 100 + 50 # Get the x position of the card
-        # yPosition = 100 # Get the y position of the card
-        # self.placeCard(cardBack, xPosition, yPosition) # call placeCard to place the card on the screen
+        self.cardBeingAnimated = cardBack # Set the cardBeingAnimated variable to the cardBack
+        self.animationDone = False # Set the animationDone to False, used to ensure player cannot click stay or hit and cause unexpected behavior with the animation
+        self.animateDealerCard = True # Set the animateDealerCard to True, used to determine where the card goes
+        self.secondDealerCardAnimation = True # set secondDealerCardAnimation to true, used for the logic when animating the second dealer card
     
     def handleStayButton(self): # Used to handle the logic for when the player clicks stay
         print(f'Insinde handSletayButton the length of dealer list is{len(self.dealerCardList)}')
@@ -523,13 +511,13 @@ class BlackJack:
             self.stay() # call stay to trigger the logic for the dealer to begin choosing cards
     
     def stay(self): # Used to handle the stay logic 
-        if self.dealerScore < 17:
-            self.addCard(False)
+        if self.dealerScore < 17: # Check if the dealers score is less than 17 (dealer must hold at 17 or greater)
+            self.addCard(False) # Call addCard with the parameter False to add a card to the dealer
         else:
-            self.checkWinner()
+            self.checkWinner() # Call checkWinner to see who won the game
     
     def checkWinner(self): # Used to check who won the game
-        self.playerTurn = False
+        self.playerTurn = False # Set the playerTurn to False
         if self.reset == False: # Check if the game has already been reset
             if self.flipped == False: # Check if the card has been flipped
                 self.flip() # Call flip to show the hidden card
@@ -550,8 +538,6 @@ class BlackJack:
                 self.winner = 'P'  # Assign the winner the value 'P' for player win
             elif self.dealerScore > self.playerScore and self.dealerScore <= 21: # Check if dealer score higher than player score and if dealer score less than or equal to 21
                 self.winner = 'D'  # Assign the winner the value 'D' for dealer win
-            elif self.dealerScore > 21 and self.playerScore > 21:
-                self.winner = 'N'
 
             self.displayWinner() # Call displayWinner to display who won the game
             
@@ -571,7 +557,7 @@ class BlackJack:
         self.betList = [] # Set betList to an empty list
         self.winner = None # Set winner to None
         self.flipped = False # Set flipped to false
-        self.test = 0
+        self.startingTurn = 0 # Set the startingTurn back to 0
         self.determineDeckShuffle() # Call determineDeckShuffle to see if the seenCards set needs to be reset
         print(f'Player score is now {self.playerScore}')
         print(f'Dealer score is now {self.dealerScore}')
