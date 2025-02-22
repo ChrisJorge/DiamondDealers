@@ -23,7 +23,6 @@ class Button():
         # place the text at the center of the button
         self.screen.blit(self.text, [(self.xCoordinate - (self.text.get_width() // 2)) + self.middleWidth, self.yCoordinate - (self.text.get_height() // 2) + self.middleHeight])
 
-
     def action(self, func): # Function to add functionality to the button
         mousePosition = game.mouse.get_pos() # Get the mouse position on the screen
         if self.rectangle.collidepoint(mousePosition): # Check if mouse cursor is colliding with the button
@@ -34,6 +33,7 @@ class Button():
                 self.clicked = False # Set self.clicked to false
 
 class WriteText:
+    
     def __init__(self, screen, size, text, textColor, backGroundColor, xCoordinate, yCoordinate):
         self.font = game.font.SysFont('Times New Roman', size, True, False)
         self.screen = screen
