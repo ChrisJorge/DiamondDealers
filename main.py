@@ -18,7 +18,7 @@ systemHeight = systemInformation.current_h # Create a variable with the system h
 
 screen = game.display.set_mode((systemWidth - 100,systemHeight - 100))  # Create the screen (width (X), height (Y))
 
-blackJack = BlackJack(screen, systemHeight - 100, systemWidth - 100, 200)
+blackJack = BlackJack(screen, systemHeight - 100, systemWidth - 100, 2000)
 #_____________________ Run the game _________________________________________________
 gameRunning = True # Initialize a variable indicating if the game is currently running
 while gameRunning:
@@ -40,10 +40,19 @@ while gameRunning:
         blackJack.animationY += YIncrease
         blackJack.animateCard(blackJack.cardBeingAnimated, blackJack.animationX, blackJack.animationY, False)
 
-    blackJack.chip1Button.action(lambda: blackJack.placeSingleBet())
-    blackJack.chip5Button.action(lambda: blackJack.placeFiveBet())
-    blackJack.chip10Button.action(lambda: blackJack.placeTenBet())
-    blackJack.chip25Button.action(lambda: blackJack.placeTwentyFiveBet())
+    if blackJack.betOption == 1:
+        blackJack.chip1Button.action(lambda: blackJack.placeSingleBet())
+        blackJack.chip5Button.action(lambda: blackJack.placeFiveBet())
+        blackJack.chip10Button.action(lambda: blackJack.placeTenBet())
+        blackJack.chip25Button.action(lambda: blackJack.placeTwentyFiveBet())
+    else:
+        blackJack.chip50Button.action(lambda: blackJack.placeFiftyBet())
+        blackJack.chip100Button.action(lambda: blackJack.placeHundredBet())
+        blackJack.chip500Button.action(lambda: blackJack.placeFiveHundredBet())
+        blackJack.chip1000Button.action(lambda: blackJack.placeThousandBet())
+    
+    blackJack.changeChipsLeftButton.action(lambda: blackJack.handleChangeChipsOnLeft())
+    blackJack.changeChipsRightButton.action(lambda: blackJack.handleChangeChipsOnRight())
     blackJack.helpButton.action(lambda: blackJack.toggleHelp())
     blackJack.removeBetButton.action(lambda: blackJack.removeBet())
     blackJack.confirmBetButton.action(lambda: blackJack.confirmBet())
