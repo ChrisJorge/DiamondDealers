@@ -61,10 +61,10 @@ class BlackJack:
 
         self.placeChipOptions(self.betOption)
 
-        self.changeChipsLeftButton = Button(self.screen, (106,84,78), 30, 30, self.screenWidth - 480, self.screenHeight - 170)
+        self.changeChipsLeftButton = Button(self.screen, (106,84,78), 50, 40, self.screenWidth - 480, self.screenHeight - 170)
         self.changeChipsLeftText = WriteText(self.screen, 45, '<', (255,255,255), (106,84,78), self.screenWidth - 480, self.screenHeight - 170)
 
-        self.changeChipsRightButton = Button(self.screen, (106,84,78), 30, 30, self.screenWidth - 40, self.screenHeight - 170)
+        self.changeChipsRightButton = Button(self.screen, (106,84,78), 50, 40, self.screenWidth - 40, self.screenHeight - 170)
         self.changeChipsRightText = WriteText(self.screen, 45, '>', (255,255,255), (106,84,78), self.screenWidth - 40, self.screenHeight - 170)
 
         self.playerMoneyText = WriteText(self.screen, 35, f'Money: ${self.playerMoney}', (255,255,255), (106,84,78), self.screenWidth - 350, self.screenHeight - 75) # Display the amount of money the player has on the screen
