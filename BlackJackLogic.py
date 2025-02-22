@@ -10,7 +10,7 @@ class BlackJack:
         self.screenHeight = screenHeight # Used to get the height of the game screen
         self.screenWidth = screenWidth # Used to get the width of the game screen
         self.playerMoney = playerMoney # Used to keep track of how much money the player has
-        self.betOption = 1
+        self.betOption = 1  # Used to keep track of which bet values appear on the screen
         self.betList = [] # Used to keep track of which bets were clicked (1,5,10,25) for removing bets
         self.bettingActive = True # Used to keep track if the player is allowed to place a bet
         self.currentBet = 0 # Used to keep track of the current bet
@@ -30,7 +30,7 @@ class BlackJack:
         self.secondDealerCard = None # Used to hold the second dealer card which is not shown at the start of the game
         self.start = True # Used to keep track if the cards being given are part of the initial 4
         self.seenCards = set() # Used to keep track of what cards have been seen 
-        self.seenCards.add(1000)
+        self.seenCards.add(1000) # Add 1000 to the set of seen cards, this number is used as the initial value of index which is then changed once a card is selected
         self.animationDone = True # Used to keep track if the card animation has finished
         self.animatePlayerCard = False # Used to keep track if card is being animated for the player or the dealer
         self.animationX = 200 # Used to keep track of the x coordiante for the animations
@@ -59,13 +59,13 @@ class BlackJack:
         self.chip500 = game.image.load('./BlackJackAssets/Chip500.svg') # Create the $500 chip
         self.chip1000 = game.image.load('./BlackJackAssets/Chip1000.svg') # Create the $1000 chip
 
-        self.placeChipOptions(self.betOption)
+        self.placeChipOptions(self.betOption) # Call placeChipOptions with the value of betOption to display the initial chip bet values
 
-        self.changeChipsLeftButton = Button(self.screen, (106,84,78), 50, 40, self.screenWidth - 480, self.screenHeight - 170)
-        self.changeChipsLeftText = WriteText(self.screen, 45, '<', (255,255,255), (106,84,78), self.screenWidth - 480, self.screenHeight - 170)
+        self.changeChipsLeftButton = Button(self.screen, (106,84,78), 50, 40, self.screenWidth - 480, self.screenHeight - 170) # Create a button to control the left arrow
+        self.changeChipsLeftText = WriteText(self.screen, 45, '<', (255,255,255), (106,84,78), self.screenWidth - 480, self.screenHeight - 170) # Create the text for the left arrow button
 
-        self.changeChipsRightButton = Button(self.screen, (106,84,78), 50, 40, self.screenWidth - 40, self.screenHeight - 170)
-        self.changeChipsRightText = WriteText(self.screen, 45, '>', (255,255,255), (106,84,78), self.screenWidth - 40, self.screenHeight - 170)
+        self.changeChipsRightButton = Button(self.screen, (106,84,78), 50, 40, self.screenWidth - 40, self.screenHeight - 170) # Create a button to control the right arrow
+        self.changeChipsRightText = WriteText(self.screen, 45, '>', (255,255,255), (106,84,78), self.screenWidth - 40, self.screenHeight - 170) # Create the text for the right arrow button
 
         self.playerMoneyText = WriteText(self.screen, 35, f'Money: ${self.playerMoney}', (255,255,255), (106,84,78), self.screenWidth - 350, self.screenHeight - 75) # Display the amount of money the player has on the screen
         self.playerBetText = WriteText(self.screen, 35, 'Player Bet: 0', (255,255,255), (106,84,78), 5, self.screenHeight - 175) # Display how much the player is betting for the round on the screen
@@ -97,21 +97,21 @@ class BlackJack:
         rectangle = game.Rect(0,80, self.screenWidth, self.screenHeight - 300) # Create a rectangle to go over the buttons for confirming and placing the bet, and the starting text
         game.draw.rect(self.screen, (78, 106, 84), rectangle) # Draw the rectangle to the screen
 
-        for _ in range(numberOfOneThousandChips):
-            xPosition += 15
-            self.screen.blit(self.chip1000, (xPosition, yPosition))
+        for _ in range(numberOfOneThousandChips): # Loop through the number of 1000 chips
+            xPosition += 15 # Increase the xPosition by 15
+            self.screen.blit(self.chip1000, (xPosition, yPosition)) # Place the 1000 chip on the screen
 
-        for _ in range(numberOfFiveHundredChips):
-            xPosition += 15
-            self.screen.blit(self.chip500, (xPosition, yPosition))
+        for _ in range(numberOfFiveHundredChips): # Loop through the number of 500 chips
+            xPosition += 15 # Increase the xPosition by 15
+            self.screen.blit(self.chip500, (xPosition, yPosition)) # Place the 500 chip on the screen
 
-        for _ in range(numberOfOneHundredChips):
-            xPosition += 15
-            self.screen.blit(self.chip100, (xPosition, yPosition))
+        for _ in range(numberOfOneHundredChips): # Loop through the number of 100 chips
+            xPosition += 15 # Increase the xPosition by 15
+            self.screen.blit(self.chip100, (xPosition, yPosition)) # Place the 100 chip on the screen
 
-        for _ in range(numberOfFiftyChips):
-            xPosition += 15 
-            self.screen.blit(self.chip50, (xPosition, yPosition))
+        for _ in range(numberOfFiftyChips): # Loop through the number of 50 chips
+            xPosition += 15 # Increase the xPosition by 15
+            self.screen.blit(self.chip50, (xPosition, yPosition)) # Place the 50 chip on the screen
 
         for _ in range(numberOfTwentyFiveChips): # Loop through the number of 25 chips
             xPosition += 15 # Increase the xPosition variable by 15
@@ -130,7 +130,8 @@ class BlackJack:
             self.screen.blit(self.chip1, (xPosition, yPosition)) # Place the 1 chip on the screen
 
     def placeChipOptions(self, option):
-        if option == 1:
+
+        if option == 1: # Check if the value of option is one
             self.chip1Button = Button(self.screen, (106,84,78), 105, 105, self.screenWidth - 150, self.screenHeight - 200) # Create a button to give the $1 chip functionality
             self.screen.blit(self.chip1,(self.screenWidth - 150, self.screenHeight - 200)) # Place the $1 chip on the screen ontop of the button
 
@@ -143,17 +144,17 @@ class BlackJack:
             self.chip25Button = Button(self.screen, (106,84,78), 105, 105, self.screenWidth - 450, self.screenHeight - 200) # Create a button to give the $25 chip functionality
             self.screen.blit(self.chip25,(self.screenWidth - 450, self.screenHeight - 200))  # Place the $25 chip on the screen ontop of the button
         else:
-            self.chip50Button = Button(self.screen, (106,84,78), 105, 105, self.screenWidth - 150, self.screenHeight - 200) # Create a button to give the $1 chip functionality
-            self.screen.blit(self.chip50,(self.screenWidth - 150, self.screenHeight - 200)) # Place the $1 chip on the screen ontop of the button
+            self.chip50Button = Button(self.screen, (106,84,78), 105, 105, self.screenWidth - 150, self.screenHeight - 200) # Create a button to give the $50 chip functionality
+            self.screen.blit(self.chip50,(self.screenWidth - 150, self.screenHeight - 200)) # Place the $50 chip on the screen ontop of the button
 
-            self.chip100Button = Button(self.screen, (106,84,78), 105, 105, self.screenWidth - 250, self.screenHeight - 200) # Create a button to give the $5 chip functionality
-            self.screen.blit(self.chip100,(self.screenWidth - 250, self.screenHeight - 200))  # Place the $5 chip on the screen ontop of the button
+            self.chip100Button = Button(self.screen, (106,84,78), 105, 105, self.screenWidth - 250, self.screenHeight - 200) # Create a button to give the $100 chip functionality
+            self.screen.blit(self.chip100,(self.screenWidth - 250, self.screenHeight - 200))  # Place the $100 chip on the screen ontop of the button
 
-            self.chip500Button = Button(self.screen, (106,84,78), 105, 105, self.screenWidth - 350, self.screenHeight - 200) # Create a button to give the $10 chip functionality
-            self.screen.blit(self.chip500,(self.screenWidth - 350, self.screenHeight - 200))  # Place the $10 chip on the screen ontop of the button
+            self.chip500Button = Button(self.screen, (106,84,78), 105, 105, self.screenWidth - 350, self.screenHeight - 200) # Create a button to give the $500 chip functionality
+            self.screen.blit(self.chip500,(self.screenWidth - 350, self.screenHeight - 200))  # Place the $500 chip on the screen ontop of the button
             
-            self.chip1000Button = Button(self.screen, (106,84,78), 105, 105, self.screenWidth - 450, self.screenHeight - 200) # Create a button to give the $25 chip functionality
-            self.screen.blit(self.chip1000,(self.screenWidth - 450, self.screenHeight - 200))  # Place the $25 chip on the screen ontop of the button
+            self.chip1000Button = Button(self.screen, (106,84,78), 105, 105, self.screenWidth - 450, self.screenHeight - 200) # Create a button to give the $1000 chip functionality
+            self.screen.blit(self.chip1000,(self.screenWidth - 450, self.screenHeight - 200))  # Place the $1000 chip on the screen ontop of the button
 
     def updateInformation(self, information): # Used to update the information on the screen
         match(information): # Get the type of information to know what to update
@@ -479,21 +480,21 @@ class BlackJack:
             self.playerMoney -= 1_000 # Decrease the playersMoney by 1000
             self.updateInformation('money+bet') # Call updateInformation to display the new balance on the screen
 
-    def handleChangeChipsOnLeft(self):
-        if self.betOption == 2:
-            self.betOption -= 1
+    def handleChangeChipsOnLeft(self): # Used to handle to logic of changing the visible chip amounts from the arrow on the left
+        if self.betOption == 2: # Check if the value of betOption is two
+            self.betOption -= 1 # Subtract the betOption value by 1
         else:
-            self.betOption += 1
+            self.betOption += 1 # Increase the betOption value by 1
 
-        self.placeChipOptions(self.betOption)
+        self.placeChipOptions(self.betOption) # Call placeChipOptions to change which chips are visible
     
-    def handleChangeChipsOnRight(self):
-        if self.betOption == 1:
-            self.betOption += 1
+    def handleChangeChipsOnRight(self): # Used to handle the logic of changing the visible chip amounts from the arrow on the right
+        if self.betOption == 1: # Check if the value of betOption is 1
+            self.betOption += 1 # Increase betOption value by 1
         else:
-            self.betOption -= 1
+            self.betOption -= 1 # Decrease betOption value by 1
         
-        self.placeChipOptions(self.betOption)
+        self.placeChipOptions(self.betOption) # Call placeChipOptions to change which chips are visible on the screen
 
     def removeBet(self): # Used to remove the last bet
         if len(self.betList) > 0 and self.bettingActive: # Check if betting is active and if there are bets in the bet list
@@ -505,21 +506,17 @@ class BlackJack:
     def confirmBet(self): # Used to confirm the bet
         if self.currentBet > 0: # Check to make sure the current bet is greater than -
             self.bettingActive = False # Turn betting off
-            self.numberOfOneThousandChips = self.getChipAmount(1000, self.currentBet)
-            self.numberOfFiveHundredChips = self.getChipAmount(500, self.currentBet - (self.numberOfOneThousandChips * 1000))
-            self.numberOfOneHundredChips = self.getChipAmount(100, self.currentBet - ((self.numberOfOneThousandChips * 1000) + (self.numberOfFiveHundredChips * 500)))
-            self.numberOfFiftyChips = self.getChipAmount(50, self.currentBet - ((self.numberOfOneThousandChips * 1000) + (self.numberOfFiveHundredChips * 500) + (self.numberOfOneHundredChips * 100)))
+            self.numberOfOneThousandChips = self.getChipAmount(1000, self.currentBet) # Get the number of one thousand chips by calling getChipAmount
+            self.numberOfFiveHundredChips = self.getChipAmount(500, self.currentBet - (self.numberOfOneThousandChips * 1000))  # Get the number of five hundred chips by calling getChipAmount
+            self.numberOfOneHundredChips = self.getChipAmount(100, self.currentBet - ((self.numberOfOneThousandChips * 1000) + (self.numberOfFiveHundredChips * 500)))  # Get the number of one hundred chips by calling getChipAmount
+            self.numberOfFiftyChips = self.getChipAmount(50, self.currentBet - ((self.numberOfOneThousandChips * 1000) + (self.numberOfFiveHundredChips * 500) + (self.numberOfOneHundredChips * 100))) # Get the number of fifty chips by calling getChipAmount
             self.numberOfTwentyFiveChips = self.getChipAmount(25, self.currentBet - ((self.numberOfOneThousandChips * 1000) + (self.numberOfFiveHundredChips * 500) + (self.numberOfOneHundredChips * 100) + (self.numberOfFiftyChips * 50))) # Get the number of 25 chips by calling getChipAmount
             self.numberOfTenChips = self.getChipAmount(10, self.currentBet - ((self.numberOfOneThousandChips * 1000) + (self.numberOfFiveHundredChips * 500) + (self.numberOfOneHundredChips * 100) + (self.numberOfFiftyChips * 50) + (self.numberOfTwentyFiveChips * 25))) # Get the number of Ten Chips by calling getChipAmount
             self.numberOfFiveChips = self.getChipAmount(5, self.currentBet - ((self.numberOfOneThousandChips * 1000) + (self.numberOfFiveHundredChips * 500) + (self.numberOfOneHundredChips * 100) + (self.numberOfFiftyChips * 50) + (self.numberOfTwentyFiveChips * 25) + (self.numberOfTenChips * 10))) # Get the number of Five Chips by calling getChipAmount
             self.numberOfOneChips = self.getChipAmount(1, self.currentBet - ((self.numberOfOneThousandChips * 1000) + (self.numberOfFiveHundredChips * 500) + (self.numberOfOneHundredChips * 100) + (self.numberOfFiftyChips * 50) + (self.numberOfTwentyFiveChips * 25) + (self.numberOfTenChips * 10) + (self.numberOfFiveChips * 5))) # Get the number of 1 chips by calling getChipAmount
             self.placeChips(self.numberOfOneThousandChips, self.numberOfFiveHundredChips, self.numberOfOneHundredChips, self.numberOfFiftyChips ,self.numberOfTwentyFiveChips, self.numberOfTenChips, self.numberOfFiveChips, self.numberOfOneChips) # Send the values to the placeChips function
-            self.start = True
+            self.start = True # Change self.start to true inorder to start the initial 4 moves of the game
             self.startGame(self.startingTurn) # Call start game to start the game and give the initial set of cards
-            # print('25', self.numberOfTwentyFiveChips)
-            # print('10', self.numberOfTenChips)
-            # print('5', self.numberOfFiveChips)
-            # print('1', self.numberOfOneChips)
         else:
             self.startText.update('Bet Cannot Be Zero', 45) # Display Bet Cannot Be Zero on screen if the player has not placed a bet
 
