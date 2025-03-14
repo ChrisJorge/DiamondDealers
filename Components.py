@@ -54,3 +54,29 @@ class WriteText:
     def remove(self,width, height):
         rectangle =  game.Rect(self.xCoordinate, self.yCoordinate, width + 25, height + 10)
         game.draw.rect(self.screen, self.backGroundColor, rectangle)
+
+class OptionFrame:
+
+    def __init__(self, screen, gameName, height, width, frameColor, textColor, image, xCoordinate, yCoordinate):
+        self.screen = screen
+        self.gameName = gameName
+        self.height = height
+        self.width = width
+        self.frameColor = frameColor
+        self.textColor = textColor 
+        self.image = game.image.load(image) 
+        self.xCoordinate = xCoordinate
+        self.yCoordinate = yCoordinate
+        self.rectangle =  game.Rect(self.xCoordinate, self.yCoordinate, self.width, self.height) # Create the Frame
+        game.draw.rect(self.screen, self.frameColor, self.rectangle) # Draw the button onto the screen
+        self.writeTitle()
+        self.placeImage()
+
+    def writeTitle(self):
+        self.font = game.font.SysFont('Times New Roman', 50, True, False)
+        self.titleForFrame = self.font.render(self.gameName,True, self.textColor)
+        self.screen.blit(self.titleForFrame, ((self.width // 2) - (self.titleForFrame.get_width() // 2) + self.xCoordinate, self.yCoordinate + self.titleForFrame.get_height() // 2))
+    
+    def placeImage(self):
+        self.image = game.transform.scale(self.image, (self.width, self.height - self.titleForFrame.get_height()))
+        self.screen.blit(self.image, (self.xCoordinate, self.yCoordinate + self.titleForFrame.get_height() + 20))

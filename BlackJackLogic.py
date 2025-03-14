@@ -188,7 +188,7 @@ class BlackJack:
             self.helpRectangle = game.Rect(self.screenWidth // 4, 0 + self.screenHeight // 5, self.screenWidth // 2, self.screenHeight // 2) # Create the rectangle for the help screen
             game.draw.rect(self.screen, (255,255,255), self.helpRectangle) # Place the rectangle on the screen
             textList = ['Card Values: Face cards (jacks, queens, and kings) are worth 10, aces are worth 1 or 11. Other cards are worth their face value.', 'Dealing: The dealer gives the player two cards face up, and then receives two cards of their own one face up one face down.',
-                        'Dealer Stay: Dealer hits if score is less than or equal to 16. Dealer holds at score higher than 17.','Play: Players can choose to hit (take another card) or stay (stay with their current hand).', 'Busting: If the players, or dealers, hand goes over 21 they bust (lose)',
+                        'Dealer Hold: Dealer hits if score is less than or equal to 16. Dealer holds at score higher than 17.','Play: Players can choose to hit (take another card) or stand (stay with their current hand).', 'Busting: If the players, or dealers, hand goes over 21 they bust (lose)',
                         'Win: Players win if their hand is closer to 21 than the dealer, or if the dealer busts.', 'Tie: If the dealer and player have the same value it is a tie.', 'Blackjack: Black jack occurs when the first two cards equal 21', 'Score: A regular win returns 2 to 1, a blackjack win returns 2.5 to 1' ]
             height =  self.screenHeight // 5 # Initialize height, used to control the y axis of the text
             for text in textList: # Loop through the textlist
