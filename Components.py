@@ -55,7 +55,7 @@ class WriteText:
         rectangle =  game.Rect(self.xCoordinate, self.yCoordinate, width + 25, height + 10)
         game.draw.rect(self.screen, self.backGroundColor, rectangle)
 
-class OptionFrame:
+class GameSelectionFrame:
 
     def __init__(self, screen, gameName, height, width, frameColor, textColor, image, xCoordinate, yCoordinate):
         self.screen = screen
@@ -80,3 +80,27 @@ class OptionFrame:
     def placeImage(self):
         self.image = game.transform.scale(self.image, (self.width, self.height - self.titleForFrame.get_height()))
         self.screen.blit(self.image, (self.xCoordinate, self.yCoordinate + self.titleForFrame.get_height() + 20))
+
+class HorseFrame:
+
+    def __init__(self, screen, frameHeight, frameWidth, image, horseNumber, payOutAmount, color, xCoordinate, yCoordinate):
+        self.screen = screen
+        self.frameHeight = frameHeight
+        self.frameWidth = frameWidth
+        self.image = image
+        self.horseNumber = horseNumber
+        self.payOutAmount = payOutAmount
+        self.color = color
+        self.xCoordinate = xCoordinate
+        self.yCoordinate = yCoordinate
+
+        self.initializeFrame()
+
+    def initializeFrame(self):
+        frame = game.Rect(self.xCoordinate, self.yCoordinate, self.frameWidth, self.frameHeight)
+        game.draw.rect(self.screen, self.color, frame)
+        self.screen.blit(self.image, (0, self.frameHeight // 6.5 + self.yCoordinate))
+        WriteText(self.screen, 25, f'Horse {self.horseNumber}', (0,0,0), self.color, self.frameWidth // 2.75, self.frameHeight // 2.5 + self.yCoordinate)
+        self.betAmountText = WriteText(self.screen, 15, '$0', (0,0,0), self.color, self.frameWidth - (self.frameWidth // 4), self.yCoordinate)
+        self.payOutAmountText = WriteText(self.screen, 15, f'Payout: ${self.payOutAmount}', (0,0,0), self.color, self.frameWidth - (self.frameWidth // 4), self.yCoordinate + self.frameHeight * .75)
+
