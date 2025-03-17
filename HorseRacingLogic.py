@@ -39,14 +39,24 @@ class HorseRacing:
 
         self.horseArray = [self.horse1, self.horse2, self.horse3, self.horse4]
 
-        self.horse1Frame = HorseFrame(self.screen, (self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3)) / 5, self.screenWidth / 4, horseImage, 1, '0', (217,217,217), 0, self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3) )
-        self.horse2Frame = HorseFrame(self.screen, (self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3)) / 5, self.screenWidth / 4, horseImage, 2, '0', (217,217,217), 0, self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3) + ((300 + self.backGroundGrassHeightIndividualLane * 3) // 5) * 1.35)
-        self.horse3Frame = HorseFrame(self.screen, (self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3)) / 5, self.screenWidth / 4, horseImage, 3, '0', (217,217,217), 0, self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3) + ((300 + self.backGroundGrassHeightIndividualLane * 3) // 5) * 2.7)
-        self.horse4Frame = HorseFrame(self.screen, (self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3)) / 5, self.screenWidth / 4, horseImage, 4, '0', (217,217,217), 0, self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3) + ((300 + self.backGroundGrassHeightIndividualLane * 3) // 5) * 4.05)
+        self.frameHeight = (self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3)) / 5
+        self.frameWidth = self.screenWidth / 4
+
+        self.horse1Button = Button(self.screen, (217,217,217), self.frameHeight , self.frameWidth, 0, self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3))
+        self.horse1Frame = HorseFrame(self.screen, self.frameHeight, self.frameWidth, horseImage, 1, '0', (217,217,217), 0, self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3))
+
+        self.horse2Button = Button(self.screen, (217,217,217), self.frameHeight, self.frameWidth, 0, self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3) + ((300 + self.backGroundGrassHeightIndividualLane * 3) // 5) * 1.35 )
+        self.horse2Frame = HorseFrame(self.screen,self.frameHeight, self.frameWidth, horseImage, 2, '0', (217,217,217), 0, self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3) + ((300 + self.backGroundGrassHeightIndividualLane * 3) // 5) * 1.35)
+
+        self.horse3Button = Button(self.screen, (217,217,217), self.frameHeight, self.frameWidth, 0, self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3) + ((300 + self.backGroundGrassHeightIndividualLane * 3) // 5) * 2.7 )
+        self.horse3Frame = HorseFrame(self.screen, self.frameHeight, self.frameWidth, horseImage, 3, '0', (217,217,217), 0, self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3) + ((300 + self.backGroundGrassHeightIndividualLane * 3) // 5) * 2.7)
+
+        self.horse4Button = Button(self.screen, (217,217,217), self.frameHeight, self.frameWidth, 0, self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3) + ((300 + self.backGroundGrassHeightIndividualLane * 3) // 5) * 4.05 )
+        self.horse4Frame = HorseFrame(self.screen, self.frameHeight, self.frameWidth, horseImage, 4, '0', (217,217,217), 0, self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3) + ((300 + self.backGroundGrassHeightIndividualLane * 3) // 5) * 4.05)
 
         betBar = game.Rect(self.screenWidth - (self.screenWidth / 3), self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3), self.screenWidth / 3, 300 + self.backGroundGrassHeightIndividualLane * 3)
         game.draw.rect(self.screen, (217,217,217), betBar)
-        self.currentHorseBeingBetOn = WriteText(self.screen, 30, f'Selected Horse: {self.selectedHorse}', (0,0,0), (217,217,217), self.screenWidth - (self.screenWidth / 4), self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3))
+        self.currentHorseBeingBetOnText = WriteText(self.screen, 30, f'Selected Horse: {self.selectedHorse}', (0,0,0), (217,217,217), self.screenWidth - (self.screenWidth / 4), self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3))
         currentHorseBetBar = game.Rect(self.screenWidth - (self.screenWidth / 4), self.screenHeight - ((300 + self.backGroundGrassHeightIndividualLane * 3) * .85), (self.screenWidth / 3) / 1.81, (self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3)) / 10 )
         game.draw.rect(self.screen, (90, 90, 90), currentHorseBetBar)
         self.currentHorseBet = WriteText(self.screen, 30, f'${self.selectedHorseBet}', (255,255,255), (90,90,90), (self.screenWidth / 3) * 2.3, (self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3)) * 1.16)
@@ -89,31 +99,26 @@ class HorseRacing:
         WriteText(self.screen, int(self.backGroundGrassHeightIndividualLane // 2), f'{number}', (255,255,255), (0,0,0), self.screenWidth - 150 + self.backGroundGrassHeightIndividualLane / 3.5, (self.backGroundGrassHeightIndividualLane * (number + number) - self.backGroundGrassHeightIndividualLane) + self.backGroundGrassHeightIndividualLane / 4.5)
 
     def calculateHorseOdds(self):
-        number = random.randint(1,2)
-        if number == 1 or number == 2:
-            for horse in self.horseArray:
-                tierAccepted = False
-                while not tierAccepted:
-                    tier = random.randint(1,3)
-                    match tier:
-                        case 1:
-                            if self.numberOfHighOdds < 2:
-                                self.numberOfHighOdds += 1
-                                tierAccepted = True
-                        case 2:
-                            if self.numberOfMediumOdds < 2:
-                                self.numberOfMediumOdds += 1
-                                tierAccepted = True
-                        case 3:
-                            if self.numberOfLowOdds < 2:
-                                self.numberOfLowOdds += 1
-                                tierAccepted = True
+        for horse in self.horseArray:
+            tierAccepted = False
+            while not tierAccepted:
+                tier = random.randint(1,3)
+                match tier:
+                    case 1:
+                        if self.numberOfHighOdds < 2:
+                            self.numberOfHighOdds += 1
+                            tierAccepted = True
+                    case 2:
+                        if self.numberOfMediumOdds < 2:
+                            self.numberOfMediumOdds += 1
+                            tierAccepted = True
+                    case 3:
+                        if self.numberOfLowOdds < 2:
+                            self.numberOfLowOdds += 1
+                            tierAccepted = True
                 odds = random.randint(0,2)
                 horse.getHorseOdds(tier, odds)
                 self.updateOdds(horse.horseNumber)
-                print(horse.horseOdds)
-        else:
-            pass
     
     def updateOdds(self, number):
         match number:
@@ -126,7 +131,18 @@ class HorseRacing:
             case 4:
                 self.horse4Frame.oddsText.update(f'Odds: {self.horse4.horseOdds}')
 
-
+    def selectHorse(self, number):
+        match number:
+            case 1:
+                self.selectedHorse = self.horse1
+            case 2:
+                self.selectedHorse = self.horse2
+            case 3:
+                self.selectedHorse = self.horse3
+            case 4:
+                self.selectedHorse = self.horse4
+        self.currentHorseBeingBetOnText.update(f'Selected Horse: Horse {self.selectedHorse.horseNumber}')
+        
 
 class Horse:
     def __init__(self, screen, heightOfLane, horseImage, horseNumber):
