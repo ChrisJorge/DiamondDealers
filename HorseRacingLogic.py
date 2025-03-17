@@ -11,10 +11,12 @@ class HorseRacing:
         self.playerMoney = playerMoney
         self.backGroundGrassHeightIndividualLane = ((self.screenHeight - 300) / 12)
         self.selectedHorse = 'N/A'
-        self.selectedHorseBet = 0
         self.numberOfHighOdds = 0
         self.numberOfMediumOdds = 0
         self.numberOfLowOdds = 0
+        self.currentBet = 0
+        self.betArray = []
+        self.warningWritten = False
         self.initializeScreen()
 
     def initializeScreen(self):
@@ -57,9 +59,9 @@ class HorseRacing:
         betBar = game.Rect(self.screenWidth - (self.screenWidth / 3), self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3), self.screenWidth / 3, 300 + self.backGroundGrassHeightIndividualLane * 3)
         game.draw.rect(self.screen, (217,217,217), betBar)
         self.currentHorseBeingBetOnText = WriteText(self.screen, 30, f'Selected Horse: {self.selectedHorse}', (0,0,0), (217,217,217), self.screenWidth - (self.screenWidth / 4), self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3))
-        currentHorseBetBar = game.Rect(self.screenWidth - (self.screenWidth / 4), self.screenHeight - ((300 + self.backGroundGrassHeightIndividualLane * 3) * .85), (self.screenWidth / 3) / 1.81, (self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3)) / 10 )
+        currentHorseBetBar = game.Rect(self.screenWidth - (self.screenWidth / 4), self.screenHeight - ((300 + self.backGroundGrassHeightIndividualLane * 3) * .85), (self.screenWidth / 3) / 1.81, (self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3)) / 10 + 10)
         game.draw.rect(self.screen, (90, 90, 90), currentHorseBetBar)
-        self.currentHorseBet = WriteText(self.screen, 30, f'${self.selectedHorseBet}', (255,255,255), (90,90,90), (self.screenWidth / 3) * 2.3, (self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3)) * 1.16)
+        self.currentBetText = WriteText(self.screen, 30, f'${self.currentBet}', (255,255,255), (90,90,90), (self.screenWidth / 3) * 2.3, (self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3)) * 1.16)
 
         self.oneDollarBet = Button(self.screen, (90,90,90), (self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3)) / 15, (self.screenWidth / 3) / 6.5, (self.screenWidth / 3) * 2.25, (self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3)) * 1.29)
         self.oneDollarBet.write('$1', 25, (255,255,255))
@@ -82,14 +84,15 @@ class HorseRacing:
         self.fiveThousandDollarBet = Button(self.screen, (90,90,90), (self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3)) / 15, (self.screenWidth / 3) / 6.5, (self.screenWidth / 3) * 2.65, (self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3)) * 1.49)
         self.fiveThousandDollarBet.write('$5000', 25, (255,255,255))
 
-        self.confirmBet = Button(self.screen, (90,90,90), (self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3)) / 12, (self.screenWidth / 3) / 1.81,  self.screenWidth - (self.screenWidth / 4), (self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3)) * 1.59)
-        self.confirmBet.write('Confirm Bet', 30, (255,255,255))
-        self.removeBet = Button(self.screen, (90,90,90), (self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3)) / 12, (self.screenWidth / 3) / 1.81,  self.screenWidth - (self.screenWidth / 4), (self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3)) * 1.69)
-        self.removeBet.write('Remove Bet', 30, (255,255,255))
+        self.confirmBetButton = Button(self.screen, (90,90,90), (self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3)) / 12, (self.screenWidth / 3) / 1.81,  self.screenWidth - (self.screenWidth / 4), (self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3)) * 1.59)
+        self.confirmBetButton.write('Confirm Bet', 30, (255,255,255))
+        self.removeBetButton = Button(self.screen, (90,90,90), (self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3)) / 12, (self.screenWidth / 3) / 1.81,  self.screenWidth - (self.screenWidth / 4), (self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3)) * 1.69)
+        self.removeBetButton.write('Remove Bet', 30, (255,255,255))
+        self.warningText = WriteText(self.screen, 30, '', (255,0,0), (217,217,217), self.screenWidth - (self.screenWidth / 4), (self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3)) * 1.79)
         
-        moneyBar = game.Rect(self.screenWidth // 2.7, self.screenHeight - self.screenHeight // 25, self.screenWidth /6, self.screenHeight / 25)
+        moneyBar = game.Rect(self.screenWidth // 2.7, self.screenHeight - self.screenHeight // 24.5, self.screenWidth /6, self.screenHeight / 24.5)
         game.draw.rect(self.screen, (217,217,217), moneyBar)
-        self.moneyText = WriteText(self.screen, 30, f'Money: ${self.playerMoney}', (0,0,0), (217,217,217), self.screenWidth // 2.7, self.screenHeight - self.screenHeight / 25)
+        self.playerMoneyText = WriteText(self.screen, 30, f'Money: ${self.playerMoney}', (0,0,0), (217,217,217), self.screenWidth // 2.7, self.screenHeight - self.screenHeight / 25)
 
         self.calculateHorseOdds()
 
@@ -142,7 +145,65 @@ class HorseRacing:
             case 4:
                 self.selectedHorse = self.horse4
         self.currentHorseBeingBetOnText.update(f'Selected Horse: Horse {self.selectedHorse.horseNumber}')
-        
+    
+    def placeBet(self, value):
+        if self.playerMoney >= value:
+            self.currentBet += value
+            self.playerMoney -= value
+            self.betArray.append(value)
+            self.updateInformation('bet + playerMoney')
+            self.removeWarning()
+        else:
+            self.warningText.update('Not enough money', self.frameWidth)
+            self.warningWritten = True
+    
+    def removeBet(self):
+        if len(self.betArray) > 0:
+            val = self.betArray.pop()
+            self.currentBet -= val 
+            self.playerMoney += val
+            self.updateInformation('bet + playerMoney')
+        else:
+            self.warningText.update('No bet to remove', self.frameWidth)
+            self.warningWritten = True
+    
+    def confirmBet(self):
+        if self.currentBet > 0:
+            if self.selectedHorse != 'N/A':
+                self.selectedHorse.betAmount += self.currentBet
+                self.currentBet = 0
+                self.betArray = []
+                self.updateInformation(self.selectedHorse.horseNumber)
+                self.updateInformation('bet')
+                self.removeWarning()
+            else:
+                self.warningText.update('A horse must be selected', self.frameWidth)
+                self.warningWritten = True
+        else:
+            self.warningText.update('Bet cannot be zero', self.frameWidth)
+            self.warningWritten = True
+
+    def removeWarning(self):
+        if self.warningWritten:
+            self.warningWritten = False
+            self.warningText.update('', self.frameWidth)
+
+    def updateInformation(self, info):
+        match info:
+            case 'bet + playerMoney':
+                self.currentBetText.update(f'${self.currentBet}', 30)
+                self.playerMoneyText.update(f'Money: ${self.playerMoney}', 30)
+            case 'bet':
+                self.currentBetText.update(f'${self.currentBet}', 30)
+            case 1:
+                self.horse1Frame.betAmountText.update(f'${self.horse1.betAmount}')
+            case 2:
+                self.horse2Frame.betAmountText.update(f'${self.horse2.betAmount}')
+            case 3:
+                self.horse3Frame.betAmountText.update(f'${self.horse3.betAmount}')
+            case 4:
+                self.horse4Frame.betAmountText.update(f'${self.horse4.betAmount}')
+
 
 class Horse:
     def __init__(self, screen, heightOfLane, horseImage, horseNumber):
@@ -156,6 +217,7 @@ class Horse:
         self.middleOdds = ['10/1', '15/1', '12/1']
         self.lowOdds = ['26/1', '24/1', '30/1']
         self.horseOdds = None
+        self.betAmount = 0
     
     def getHorseOdds(self, tier, odds):
         match tier:
