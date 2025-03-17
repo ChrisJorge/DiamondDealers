@@ -101,6 +101,7 @@ class HorseRacing:
         self.playerMoneyText = WriteText(self.screen, 30, f'Money: ${self.playerMoney}', (0,0,0), (217,217,217), self.screenWidth // 2.7, self.screenHeight - self.screenHeight / 25)
 
         self.timeText = WriteText(self.screen, 30, f'Next Race: {30 - self.currentTime}', (0,0,0),(106,84,78), self.screenWidth // 2.8,  self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3))
+        self.lastRaceWinnerText = WriteText(self.screen, 30, 'Previous Race Winner: N/A', (0,0,0), (106,84,78), self.screenWidth // 2.8, self.screenHeight - ((300 + self.backGroundGrassHeightIndividualLane * 3) * .75))
         self.calculateHorseOdds()
 
     def initializeGrassNumber(self, number):
@@ -228,6 +229,7 @@ class HorseRacing:
         if horse.horseX >= self.startingLineFinishCoordinate and self.winnerFound == False:
             self.winnerFound = True
             self.winner = horse
+            self.lastRaceWinnerText.update(f'Previous Race Winner: Horse {self.winner.horseNumber}')
             self.resetRace()
 
     def replaceItemsOnScreen(self):
@@ -245,6 +247,7 @@ class HorseRacing:
             horse.placeHorse()
             horse.horseX = 10
             horse.betAmount = 0
+            self.updateInformation(horse.horseNumber)
         self.winnerFound = False
         self.winner = None
         self.startTime = game.time.get_ticks()
@@ -257,20 +260,20 @@ class HorseRacing:
     def updateInformation(self, info):
         match info:
             case 'bet + playerMoney':
-                self.currentBetText.update(f'${self.currentBet}', 30)
-                self.playerMoneyText.update(f'Money: ${self.playerMoney}', 30)
+                self.currentBetText.update(f'${self.currentBet}', 50)
+                self.playerMoneyText.update(f'Money: ${self.playerMoney}', 50)
             case 'bet':
-                self.currentBetText.update(f'${self.currentBet}', 30)
+                self.currentBetText.update(f'${self.currentBet}', 50)
             case 1:
-                self.horse1Frame.betAmountText.update(f'${self.horse1.betAmount}')
+                self.horse1Frame.betAmountText.update(f'${self.horse1.betAmount}', 50)
             case 2:
-                self.horse2Frame.betAmountText.update(f'${self.horse2.betAmount}')
+                self.horse2Frame.betAmountText.update(f'${self.horse2.betAmount}', 50)
             case 3:
-                self.horse3Frame.betAmountText.update(f'${self.horse3.betAmount}')
+                self.horse3Frame.betAmountText.update(f'${self.horse3.betAmount}', 50)
             case 4:
-                self.horse4Frame.betAmountText.update(f'${self.horse4.betAmount}')
+                self.horse4Frame.betAmountText.update(f'${self.horse4.betAmount}', 50)
             case 'money':
-                self.playerMoneyText.update(f'Money: ${self.playerMoney}', 30)
+                self.playerMoneyText.update(f'Money: ${self.playerMoney}', 50)
 
 class Horse:
     def __init__(self, screen, heightOfLane, horseImage, horseNumber):
