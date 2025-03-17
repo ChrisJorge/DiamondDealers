@@ -17,7 +17,7 @@ class HorseRacing:
         self.currentBet = 0
         self.betArray = []
         self.warningWritten = False
-        self.raceStarted = True
+        self.raceStarted = False
         self.startTime = 0
         self.currentTime = 0
         self.startingLineFinishCoordinate = self.screenWidth - 300
@@ -178,19 +178,23 @@ class HorseRacing:
             self.warningWritten = True
     
     def confirmBet(self):
-        if self.currentBet > 0:
-            if self.selectedHorse != 'N/A':
-                self.selectedHorse.betAmount += self.currentBet
-                self.currentBet = 0
-                self.betArray = []
-                self.updateInformation(self.selectedHorse.horseNumber)
-                self.updateInformation('bet')
-                self.removeWarning()
+        if self.raceStarted == False:
+            if self.currentBet > 0:
+                if self.selectedHorse != 'N/A':
+                    self.selectedHorse.betAmount += self.currentBet
+                    self.currentBet = 0
+                    self.betArray = []
+                    self.updateInformation(self.selectedHorse.horseNumber)
+                    self.updateInformation('bet')
+                    self.removeWarning()
+                else:
+                    self.warningText.update('A horse must be selected', self.frameWidth)
+                    self.warningWritten = True
             else:
-                self.warningText.update('A horse must be selected', self.frameWidth)
+                self.warningText.update('Bet cannot be zero', self.frameWidth)
                 self.warningWritten = True
         else:
-            self.warningText.update('Bet cannot be zero', self.frameWidth)
+            self.warningText.update('Cannot bet during the race', self.frameWidth)
             self.warningWritten = True
 
     def removeWarning(self):
@@ -233,16 +237,22 @@ class HorseRacing:
             self.initializeGrassNumber(number)
 
     def resetRace(self):
+        self.givePlayerMoney()
         self.raceStarted = False
         self.calculateHorseOdds()
         self.replaceItemsOnScreen()
         for horse in self.horseArray:
             horse.placeHorse()
             horse.horseX = 10
+            horse.betAmount = 0
         self.winnerFound = False
         self.winner = None
         self.startTime = game.time.get_ticks()
         self.calculateHorseOdds()
+
+    def givePlayerMoney(self):
+        self.playerMoney += (self.winner.betAmount * self.winner.multiplyAmount)
+        self.updateInformation('money') 
 
     def updateInformation(self, info):
         match info:
@@ -259,7 +269,8 @@ class HorseRacing:
                 self.horse3Frame.betAmountText.update(f'${self.horse3.betAmount}')
             case 4:
                 self.horse4Frame.betAmountText.update(f'${self.horse4.betAmount}')
-
+            case 'money':
+                self.playerMoneyText.update(f'Money: ${self.playerMoney}', 30)
 
 class Horse:
     def __init__(self, screen, heightOfLane, horseImage, horseNumber):
@@ -304,6 +315,7 @@ class Horse:
             elif character != '/':
                 denominator += character
         
+        self.multiplyAmount = int(numerator)
         additionalSpeed = int(denominator) / int(numerator)
         number = random.random()
         self.speed = additionalSpeed + number
