@@ -109,6 +109,9 @@ class HorseRacing:
         WriteText(self.screen, int(self.backGroundGrassHeightIndividualLane // 2), f'{number}', (255,255,255), (0,0,0), self.screenWidth - 150 + self.backGroundGrassHeightIndividualLane / 3.5, (self.backGroundGrassHeightIndividualLane * (number + number) - self.backGroundGrassHeightIndividualLane) + self.backGroundGrassHeightIndividualLane / 4.5)
 
     def calculateHorseOdds(self):
+        self.numberOfHighOdds = 0
+        self.numberOfMediumOdds = 0
+        self.numberOfLowOdds = 0
         for horse in self.horseArray:
             tierAccepted = False
             while not tierAccepted:
@@ -200,7 +203,7 @@ class HorseRacing:
             self.raceStarted = True
             self.timeText.update('Next Race: Now', 30)
         else:
-            self.timeText.update(f'Next Race: {30 - self.currentTime}')
+            self.timeText.update(f'Next Race: {30 - self.currentTime}', 30)
     
     def moveHorses(self):
         self.replaceItemsOnScreen()
@@ -221,13 +224,25 @@ class HorseRacing:
         if horse.horseX >= self.startingLineFinishCoordinate and self.winnerFound == False:
             self.winnerFound = True
             self.winner = horse
-            self.raceStarted = False
+            self.resetRace()
 
     def replaceItemsOnScreen(self):
         self.screen.blit(self.backGround, (0,-170))
         self.screen.blit(self.finishLine, (self.screenWidth - 300, -17))
         for number in range(1,5):
             self.initializeGrassNumber(number)
+
+    def resetRace(self):
+        self.raceStarted = False
+        self.calculateHorseOdds()
+        self.replaceItemsOnScreen()
+        for horse in self.horseArray:
+            horse.placeHorse()
+            horse.horseX = 10
+        self.winnerFound = False
+        self.winner = None
+        self.startTime = game.time.get_ticks()
+        self.calculateHorseOdds()
 
     def updateInformation(self, info):
         match info:
