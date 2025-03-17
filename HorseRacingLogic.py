@@ -17,9 +17,12 @@ class HorseRacing:
         self.currentBet = 0
         self.betArray = []
         self.warningWritten = False
-        self.raceStarted = False
+        self.raceStarted = True
         self.startTime = 0
         self.currentTime = 0
+        self.startingLineFinishCoordinate = self.screenWidth - 300
+        self.winnerFound = False
+        self.winner = None
         self.initializeScreen()
 
     def initializeScreen(self):
@@ -198,6 +201,33 @@ class HorseRacing:
             self.timeText.update('Next Race: Now', 30)
         else:
             self.timeText.update(f'Next Race: {30 - self.currentTime}')
+    
+    def moveHorses(self):
+        self.replaceItemsOnScreen()
+        self.screen.blit(self.horse1.horseImage, (self.horse1.horseX, self.horse1.horseY))
+        self.screen.blit(self.horse2.horseImage, (self.horse2.horseX, self.horse2.horseY))
+        self.screen.blit(self.horse3.horseImage, (self.horse3.horseX, self.horse3.horseY))
+        self.screen.blit(self.horse4.horseImage, (self.horse4.horseX, self.horse4.horseY))
+        self.checkForWinner()
+
+    def checkForWinner(self):
+        if self.winnerFound == False:
+            self.checkCoordinates(self.horse1)
+            self.checkCoordinates(self.horse2)
+            self.checkCoordinates(self.horse3)
+            self.checkCoordinates(self.horse4)
+
+    def checkCoordinates(self, horse):
+        if horse.horseX >= self.startingLineFinishCoordinate and self.winnerFound == False:
+            self.winnerFound = True
+            self.winner = horse
+            self.raceStarted = False
+
+    def replaceItemsOnScreen(self):
+        self.screen.blit(self.backGround, (0,-170))
+        self.screen.blit(self.finishLine, (self.screenWidth - 300, -17))
+        for number in range(1,5):
+            self.initializeGrassNumber(number)
 
     def updateInformation(self, info):
         match info:
@@ -229,7 +259,13 @@ class Horse:
         self.lowOdds = ['26/1', '24/1', '30/1']
         self.horseOdds = None
         self.betAmount = 0
+        self.speed = 0
+        self.horseX = 10
+        self.horseY = self.heightOfLane * (self.horseNumber + self.horseNumber) - (self.heightOfLane + 15)
     
+    def placeHorse(self):
+        self.screen.blit(self.horseImage, (10, self.heightOfLane * (self.horseNumber + self.horseNumber) - (self.heightOfLane + 15)))
+
     def getHorseOdds(self, tier, odds):
         match tier:
             case 1:
@@ -238,3 +274,22 @@ class Horse:
                 self.horseOdds = self.middleOdds[odds]
             case 3:
                 self.horseOdds = self.lowOdds[odds]
+        self.determineSpeed()
+    
+    def determineSpeed(self):
+        numerator = ''
+        denominator = ''
+        firstHalf = True
+        for character in self.horseOdds:
+            if character == '/':
+                firstHalf = False
+                
+            if firstHalf and character != '/':
+                numerator += character
+            elif character != '/':
+                denominator += character
+        
+        additionalSpeed = int(denominator) / int(numerator)
+        number = random.random()
+        self.speed = additionalSpeed + number
+        
