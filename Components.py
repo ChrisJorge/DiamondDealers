@@ -54,3 +54,53 @@ class WriteText:
     def remove(self,width, height):
         rectangle =  game.Rect(self.xCoordinate, self.yCoordinate, width + 25, height + 10)
         game.draw.rect(self.screen, self.backGroundColor, rectangle)
+
+class GameSelectionFrame:
+
+    def __init__(self, screen, gameName, height, width, frameColor, textColor, image, xCoordinate, yCoordinate):
+        self.screen = screen
+        self.gameName = gameName
+        self.height = height
+        self.width = width
+        self.frameColor = frameColor
+        self.textColor = textColor 
+        self.image = game.image.load(image) 
+        self.xCoordinate = xCoordinate
+        self.yCoordinate = yCoordinate
+        self.rectangle =  game.Rect(self.xCoordinate, self.yCoordinate, self.width, self.height) # Create the Frame
+        game.draw.rect(self.screen, self.frameColor, self.rectangle) # Draw the button onto the screen
+        self.writeTitle()
+        self.placeImage()
+
+    def writeTitle(self):
+        self.font = game.font.SysFont('Times New Roman', 50, True, False)
+        self.titleForFrame = self.font.render(self.gameName,True, self.textColor)
+        self.screen.blit(self.titleForFrame, ((self.width // 2) - (self.titleForFrame.get_width() // 2) + self.xCoordinate, self.yCoordinate + self.titleForFrame.get_height() // 2))
+    
+    def placeImage(self):
+        self.image = game.transform.scale(self.image, (self.width, self.height - self.titleForFrame.get_height()))
+        self.screen.blit(self.image, (self.xCoordinate, self.yCoordinate + self.titleForFrame.get_height() + 20))
+
+class HorseFrame:
+
+    def __init__(self, screen, frameHeight, frameWidth, image, horseNumber, odds, color, xCoordinate, yCoordinate):
+        self.screen = screen
+        self.frameHeight = frameHeight
+        self.frameWidth = frameWidth
+        self.image = image
+        self.horseNumber = horseNumber
+        self.odds = odds
+        self.color = color
+        self.xCoordinate = xCoordinate
+        self.yCoordinate = yCoordinate
+
+        self.initializeFrame()
+
+    def initializeFrame(self):
+        frame = game.Rect(self.xCoordinate, self.yCoordinate, self.frameWidth, self.frameHeight)
+        game.draw.rect(self.screen, self.color, frame)
+        self.screen.blit(self.image, (0, self.frameHeight // 6.5 + self.yCoordinate))
+        WriteText(self.screen, 25, f'Horse {self.horseNumber}', (0,0,0), self.color, self.frameWidth // 2.75, self.frameHeight // 2.5 + self.yCoordinate)
+        self.betAmountText = WriteText(self.screen, 17, '$0', (0,0,0), self.color, self.frameWidth - (self.frameWidth // 3), self.yCoordinate)
+        self.oddsText = WriteText(self.screen, 17, f'Odds: ${self.odds}', (0,0,0), self.color, self.frameWidth - (self.frameWidth // 3), self.yCoordinate + self.frameHeight * .70)
+
