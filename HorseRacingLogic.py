@@ -17,6 +17,9 @@ class HorseRacing:
         self.currentBet = 0
         self.betArray = []
         self.warningWritten = False
+        self.raceStarted = False
+        self.startTime = 0
+        self.currentTime = 0
         self.initializeScreen()
 
     def initializeScreen(self):
@@ -94,6 +97,7 @@ class HorseRacing:
         game.draw.rect(self.screen, (217,217,217), moneyBar)
         self.playerMoneyText = WriteText(self.screen, 30, f'Money: ${self.playerMoney}', (0,0,0), (217,217,217), self.screenWidth // 2.7, self.screenHeight - self.screenHeight / 25)
 
+        self.timeText = WriteText(self.screen, 30, f'Next Race: {30 - self.currentTime}', (0,0,0),(106,84,78), self.screenWidth // 2.8,  self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3))
         self.calculateHorseOdds()
 
     def initializeGrassNumber(self, number):
@@ -187,6 +191,13 @@ class HorseRacing:
         if self.warningWritten:
             self.warningWritten = False
             self.warningText.update('', self.frameWidth)
+
+    def updateTime(self):
+        if self.currentTime == 30:
+            self.raceStarted = True
+            self.timeText.update('Next Race: Now', 30)
+        else:
+            self.timeText.update(f'Next Race: {30 - self.currentTime}')
 
     def updateInformation(self, info):
         match info:
