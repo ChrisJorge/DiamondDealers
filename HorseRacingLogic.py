@@ -23,6 +23,7 @@ class HorseRacing:
         self.startingLineFinishCoordinate = self.screenWidth - 300
         self.winnerFound = False
         self.winner = None
+        self.gameType = 'horseRacing'
         self.initializeScreen()
 
     def initializeScreen(self):

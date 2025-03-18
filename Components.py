@@ -68,6 +68,7 @@ class GameSelectionFrame:
         self.xCoordinate = xCoordinate
         self.yCoordinate = yCoordinate
         self.rectangle =  game.Rect(self.xCoordinate, self.yCoordinate, self.width, self.height) # Create the Frame
+        self.createButton()
         game.draw.rect(self.screen, self.frameColor, self.rectangle) # Draw the button onto the screen
         self.writeTitle()
         self.placeImage()
@@ -80,6 +81,9 @@ class GameSelectionFrame:
     def placeImage(self):
         self.image = game.transform.scale(self.image, (self.width, self.height - self.titleForFrame.get_height()))
         self.screen.blit(self.image, (self.xCoordinate, self.yCoordinate + self.titleForFrame.get_height() + 20))
+    
+    def createButton(self):
+        self.frameButton = Button(self.screen, self.frameColor, self.height, self.width, self.xCoordinate, self.yCoordinate)
 
 class HorseFrame:
 
