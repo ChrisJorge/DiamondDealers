@@ -40,6 +40,7 @@ class BlackJack:
         self.animateDealerCard = False # Used to determine if card is animated to dealer or player
         self.secondDealerCardAnimation = False # Used to keep track if the dealers second card, the one you cannot see, has been animated
         self.startingTurn = 0 # Used to keep track of the starting turn, used for the 4 initial moves each game
+        self.gameType = 'blackJack'
         self.initializeScreen() # Call initialize screen to display the user interface
     
     # __________________ Functions To Display Information And Visuals On Screen ____________
