@@ -30,10 +30,11 @@ class HorseRacing:
         self.backGround = game.image.load('./HorseRaceAssets/BackGround.jpg')
         self.backGround = game.transform.rotate(self.backGround, 90)
         self.backGround = game.transform.scale(self.backGround, (self.screenWidth, self.screenHeight - 300))
-        self.screen.blit(self.backGround, (0,0))
+        # self.screen.blit(self.backGround, (0,0))
+        self.screen.blit(self.backGround, (0,-170))
         self.finishLine = game.image.load('./HorseRaceAssets/FinishLine.svg')
         self.screen.blit(self.finishLine, (self.screenWidth - 300, 0))
-        bottomBar = game.Rect(0, self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3), self.screenWidth, 300 + self.backGroundGrassHeightIndividualLane * 3) # Create the bottom brown bar that will hold all of the options
+        bottomBar = game.Rect(0, self.screenHeight - (305 + self.backGroundGrassHeightIndividualLane * 3), self.screenWidth, 305 + self.backGroundGrassHeightIndividualLane * 3) # Create the bottom brown bar that will hold all of the options
         game.draw.rect(self.screen, (106,84,78), bottomBar) # Place the bottom bar onto the screen
 
         for number in range(1,5):
@@ -103,6 +104,9 @@ class HorseRacing:
 
         self.timeText = WriteText(self.screen, 30, f'Next Race: {30 - self.currentTime}', (0,0,0),(106,84,78), self.screenWidth // 2.8,  self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3))
         self.lastRaceWinnerText = WriteText(self.screen, 30, 'Previous Race Winner: N/A', (0,0,0), (106,84,78), self.screenWidth // 2.8, self.screenHeight - ((300 + self.backGroundGrassHeightIndividualLane * 3) * .75))
+
+        self.exitButton = Button(self.screen, (90,90,90), self.screenHeight // 20, self.screenWidth // 20, self.screenWidth - (self.screenWidth // 20), 0 )
+        self.exitButton.write('Exit', 35, (255,255,255))
         self.calculateHorseOdds()
 
     def initializeGrassNumber(self, number):
@@ -236,6 +240,8 @@ class HorseRacing:
     def replaceItemsOnScreen(self):
         self.screen.blit(self.backGround, (0,-170))
         self.screen.blit(self.finishLine, (self.screenWidth - 300, -17))
+        self.exitButton = Button(self.screen, (90,90,90), self.screenHeight // 20, self.screenWidth // 20, self.screenWidth - (self.screenWidth // 20), 0 )
+        self.exitButton.write('Exit', 35, (255,255,255))
         for number in range(1,5):
             self.initializeGrassNumber(number)
 

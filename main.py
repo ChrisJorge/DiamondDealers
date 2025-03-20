@@ -1,7 +1,7 @@
 #____________________ Import Necessary Libraries and classes _______________________
 import pygame as game # Import the pygame module
 
-from Components import GameSelectionFrame # Import the components from component class
+from Components import GameSelectionFrame, WriteText # Import the components from component class
 
 from BlackJackLogic import BlackJack
 
@@ -21,19 +21,39 @@ systemHeight = systemInformation.current_h # Create a variable with the system h
 screen = game.display.set_mode((systemWidth - 100,systemHeight - 100))  # Create the screen (width (X), height (Y))
 gameBeingPlayed = 'None'
 playerMoney = 200
-
-def changeGame(num):
-    # clearScreen()
+mainScreen = False
+activateSecondGame = False
+def returnToMainMenu():
     global gameBeingPlayed
     global playerMoney
-    if gameBeingPlayed != 'None':
-                playerMoney = gameBeingPlayed.playerMoney
+    global mainScreen
+    global activateSecondGame
+
+    playerMoney = gameBeingPlayed.playerMoney
+    gameBeingPlayed = 'None'
+    mainScreen = False
+    activateSecondGame = False
+    game.event.clear()
+    clearScreen()
+
+def changeGame(num):
+    global gameBeingPlayed
+    global playerMoney
+    global mainScreen
+    
 
     match num:
+        case 0:
+            print('Inside 0')
+            gameBeingPlayed = 'None'
         case 1:
+            print('Inside 1')
             gameBeingPlayed = BlackJack(screen, systemHeight - 100, systemWidth - 100, playerMoney)
+            mainScreen = False
         case 2:
+            print('Inside 2', mainScreen)
             gameBeingPlayed = HorseRacing(screen, systemHeight - 100, systemWidth - 100, playerMoney)
+            gameBeingPlayed.startTime = game.time.get_ticks()
 
 def clearScreen():
     rectangle = game.Rect(0,0,systemWidth - 100, systemHeight - 100)
@@ -48,11 +68,12 @@ while gameRunning:
         if event.type == game.QUIT: # Check if the event is quit (clicking the red exit button)
             gameRunning = False # Turn the game off
     if gameBeingPlayed == 'None':
-        blackJackOption = GameSelectionFrame(screen, 'Black Jack', systemHeight / 2, systemWidth / 2, (140,68,78), (0,0,0), './StartingScreenAssets/BlackJackGameImage.png', 0, 0)
-        horseRaceOption = GameSelectionFrame(screen, 'Horse Racing', systemHeight / 2, systemWidth / 2, (100,60,99), (0,0,0), './StartingScreenAssets/HorseRacingGameImage.png', systemWidth / 2, 0)
-        blackJackOption.frameButton.action(lambda: changeGame(1))
-        horseRaceOption.frameButton.action(lambda: changeGame(2))
-    elif gameBeingPlayed != 'None' and gameBeingPlayed.gameType == 'blackJack':
+            WriteText(screen, 40, 'Select A Game', (255,255,255), (0,0,0), systemWidth / 2.33, 0)
+            blackJackOption = GameSelectionFrame(screen, 'Black Jack', (systemHeight / 2) - (systemHeight / 15), systemWidth / 2, (140,68,78), (0,0,0), './StartingScreenAssets/BlackJackGameImage.png', 0, systemHeight / 15)
+            horseRaceOption = GameSelectionFrame(screen, 'Horse Racing',  (systemHeight / 2) - (systemHeight / 15), systemWidth / 2, (100,60,99), (0,0,0), './StartingScreenAssets/HorseRacingGameImage.png', systemWidth / 2, systemHeight / 15)
+            blackJackOption.frameButton.action(lambda: changeGame(1))
+            horseRaceOption.frameButton.action(lambda: changeGame(2))
+    if gameBeingPlayed != 'None' and gameBeingPlayed.gameType == 'blackJack':
         if gameBeingPlayed.animatePlayerCard:
             XIncrease = (gameBeingPlayed.xStartingPoint - 200) / 30
             YIncrease = ((systemHeight - 600) - 197) / 30
@@ -84,6 +105,7 @@ while gameRunning:
         gameBeingPlayed.confirmBetButton.action(lambda: gameBeingPlayed.confirmBet())
         gameBeingPlayed.hitButton.action(lambda: gameBeingPlayed.handleHitButton())
         gameBeingPlayed.standButton.action(lambda: gameBeingPlayed.handleStayButton())
+        gameBeingPlayed.exitButton.action(lambda: returnToMainMenu())
 
     elif gameBeingPlayed != 'None' and gameBeingPlayed.gameType == 'horseRacing':
         gameBeingPlayed.horse1Button.action(lambda: gameBeingPlayed.selectHorse(1))
@@ -110,4 +132,5 @@ while gameRunning:
             gameBeingPlayed.horse3.horseX += gameBeingPlayed.horse3.speed
             gameBeingPlayed.horse4.horseX += gameBeingPlayed.horse4.speed
             gameBeingPlayed.moveHorses()
+        gameBeingPlayed.exitButton.action(lambda: returnToMainMenu())
     game.display.update() # update the content that appears on the screen 
