@@ -64,7 +64,7 @@ class GameSelectionFrame:
         self.width = width
         self.frameColor = frameColor
         self.textColor = textColor 
-        self.image = game.image.load(image) 
+        self.image = game.image.load(image)
         self.xCoordinate = xCoordinate
         self.yCoordinate = yCoordinate
         self.rectangle =  game.Rect(self.xCoordinate, self.yCoordinate, self.width, self.height) # Create the Frame

@@ -103,6 +103,9 @@ class HorseRacing:
 
         self.timeText = WriteText(self.screen, 30, f'Next Race: {30 - self.currentTime}', (0,0,0),(106,84,78), self.screenWidth // 2.8,  self.screenHeight - (300 + self.backGroundGrassHeightIndividualLane * 3))
         self.lastRaceWinnerText = WriteText(self.screen, 30, 'Previous Race Winner: N/A', (0,0,0), (106,84,78), self.screenWidth // 2.8, self.screenHeight - ((300 + self.backGroundGrassHeightIndividualLane * 3) * .75))
+
+        self.exitButton = Button(self.screen, (90,90,90), self.screenHeight // 20, self.screenWidth // 20, self.screenWidth - (self.screenWidth // 20), 0 )
+        self.exitButton.write('Exit', 35, (255,255,255))
         self.calculateHorseOdds()
 
     def initializeGrassNumber(self, number):

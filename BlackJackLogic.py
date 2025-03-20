@@ -40,7 +40,7 @@ class BlackJack:
         self.animateDealerCard = False # Used to determine if card is animated to dealer or player
         self.secondDealerCardAnimation = False # Used to keep track if the dealers second card, the one you cannot see, has been animated
         self.startingTurn = 0 # Used to keep track of the starting turn, used for the 4 initial moves each game
-        self.gameType = 'blackJack'
+        self.gameType = 'blackJack' # Used to determine which game buttons on the screen to activate
         self.initializeScreen() # Call initialize screen to display the user interface
     
     # __________________ Functions To Display Information And Visuals On Screen ____________
@@ -89,6 +89,9 @@ class BlackJack:
         self.removeBetButton = Button(self.screen, (90,90,90), 100, 150, self.screenWidth // 2 + 50, self.screenHeight - 350) # Create a button to act as the remove bet button
         self.removeBetButton.write('Remove', 35, (255,255,255)) # Call write to write text on the button
 
+        self.exitButton = Button(self.screen, (90,90,90), self.screenHeight // 20, self.screenWidth // 20, self.screenWidth - (self.screenWidth // 20), 0 )
+        self.exitButton.write('Exit', 35, (255,255,255))
+        
         self.placeDeckImage() # Call placeDecckImage to place the image of the deck
         self.initializeCardDeck() # Call initializeCardDeck to initialize the deck of cards used in the game
     
