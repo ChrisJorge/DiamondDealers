@@ -53,6 +53,7 @@ def changeGame(num):
         case 2:
             print('Inside 2', mainScreen)
             gameBeingPlayed = HorseRacing(screen, systemHeight - 100, systemWidth - 100, playerMoney)
+            gameBeingPlayed.startTime = game.time.get_ticks()
 
 def clearScreen():
     rectangle = game.Rect(0,0,systemWidth - 100, systemHeight - 100)
