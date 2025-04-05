@@ -107,4 +107,3 @@ class HorseFrame:
         WriteText(self.screen, 25, f'Horse {self.horseNumber}', (0,0,0), self.color, self.frameWidth // 2.75, self.frameHeight // 2.5 + self.yCoordinate)
         self.betAmountText = WriteText(self.screen, 17, '$0', (0,0,0), self.color, self.frameWidth - (self.frameWidth // 3), self.yCoordinate)
         self.oddsText = WriteText(self.screen, 17, f'Odds: ${self.odds}', (0,0,0), self.color, self.frameWidth - (self.frameWidth // 3), self.yCoordinate + self.frameHeight * .70)
-

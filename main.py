@@ -17,7 +17,8 @@ game.display.set_icon(game.image.load('./Logo.png')) # Create the logo for the t
 systemInformation = game.display.Info() # Get the system information
 systemWidth = systemInformation.current_w # Create a variable with the system width
 systemHeight = systemInformation.current_h # Create a variable with the system height
-
+print(systemHeight)
+print(systemWidth)
 screen = game.display.set_mode((systemWidth - 100,systemHeight - 100))  # Create the screen (width (X), height (Y))
 gameBeingPlayed = 'None'
 playerMoney = 200

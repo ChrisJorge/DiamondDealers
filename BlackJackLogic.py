@@ -41,9 +41,29 @@ class BlackJack:
         self.secondDealerCardAnimation = False # Used to keep track if the dealers second card, the one you cannot see, has been animated
         self.startingTurn = 0 # Used to keep track of the starting turn, used for the 4 initial moves each game
         self.gameType = 'blackJack' # Used to determine which game buttons on the screen to activate
+        print(self.screenHeight, self.screenWidth)
         self.initializeScreen() # Call initialize screen to display the user interface
     
     # __________________ Functions To Display Information And Visuals On Screen ____________
+    
+    def calculateSizes(self):
+        self.blockWidth = self.screenWidth / 10
+        self.blockHeight = self.screenHeight / 10
+        # r0 = game.Rect(0,0,1,self.screenHeight)
+        # r1 = game.Rect(self.blockWidth, 0, 1, self.screenHeight)
+        # r2 = game.Rect(self.blockWidth * 2, 0, 1, self.screenHeight)
+        # r3 = game.Rect(self.blockWidth * 3, 0, 1, self.screenHeight)
+        # r4 = game.Rect(self.blockWidth * 4, 0, 1, self.screenHeight)
+        # r5 = game.Rect(self.blockWidth * 5, 0, 1, self.screenHeight)
+        # game.draw.rect(self.screen, (0,0,0), r1)
+
+        for column in range(10):
+            c = game.Rect(self.blockWidth * column,0,1,self.screenHeight)
+            game.draw.rect(self.screen, (0,0,0), c)
+        
+        for row in range(10):
+            r = game.Rect(0,self.blockHeight * row, self.screenWidth, 1)
+            game.draw.rect(self.screen, (0,0,0), r)
     
     def initializeScreen(self): # Function to initialize the game screen
 
@@ -94,6 +114,7 @@ class BlackJack:
         
         self.placeDeckImage() # Call placeDecckImage to place the image of the deck
         self.initializeCardDeck() # Call initializeCardDeck to initialize the deck of cards used in the game
+        self.calculateSizes()
     
     def placeChips(self, numberOfOneThousandChips, numberOfFiveHundredChips, numberOfOneHundredChips, numberOfFiftyChips, numberOfTwentyFiveChips, numberOfTenChips, numberOfFiveChips, numberOfOneChips): # Used to place the chips on the screen
         xPosition = self.screenWidth // 2 - 100 # Initialize the starting X position of the chips
