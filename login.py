@@ -9,9 +9,12 @@ import smtplib
 import ssl
 import secrets
 import datetime
+import subprocess
+import sys
 from pymongo import MongoClient
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+
 
 # db connection
 MONGO_URI = "mongodb+srv://jdeloughery:xpblAePTm7rInt1q@useraccountsdd.28j3v.mongodb.net/?retryWrites=true&w=majority&appName=UserAccountsDD"
@@ -161,6 +164,13 @@ def login():
         if verify_password(stored_salt, stored_key, password):
             users_collection.update_one({"username": username}, {"$set": {"failed_login_attempts": 0}})
             messagebox.showinfo("Success", "Logged in successfully!")
+            
+            # CLOSE Tkinter window
+            root.destroy()
+            
+            # RUN the Pygame app
+            subprocess.run([sys.executable, "main.py"])
+            
             return
 
     users_collection.update_one({"username": username}, {"$inc": {"failed_login_attempts": 1}})
